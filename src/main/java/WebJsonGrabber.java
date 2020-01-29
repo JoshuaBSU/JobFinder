@@ -1,15 +1,24 @@
 import com.google.gson.*;
 
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Vector;
 
 public class WebJsonGrabber {
     public static void main(String[] args)
     {
-        System.out.println("Hello World");
+        String url = "http://jobs.github.com/positions.json?page=";
+        int pageNumber = 1;
+        System.out.println(url);
+
+        URLDownloader downloader = new URLDownloader();
+        downloader.address(url,Integer.toString(pageNumber));
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-
-        String tesJson = "{\n" +
+        /*
+        String testJson = "{\n" +
                 "    \"id\": \"cd535970-ec11-11e8-89ae-2e904411ec0e\",\n" +
                 "    \"type\": \"Full Time\",\n" +
                 "    \"url\": \"https://jobs.github.com/positions/cd535970-ec11-11e8-89ae-2e904411ec0e\",\n" +
@@ -26,10 +35,10 @@ public class WebJsonGrabber {
 
         Vector<JobPost> jobLists = new Vector<JobPost>();
         //jobLists.add(new JobPost());
-        JobPost jobx = gson.fromJson(tesJson, JobPost.class);
+        JobPost jobx = gson.fromJson(testJson, JobPost.class);
 
         System.out.println(jobx.toString());
-
+        */
 
 
 
