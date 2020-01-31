@@ -18,19 +18,7 @@ public class JobPost
 
     @Override
     public String toString() {
-        return "JobPost{" +
-                "id='" + id + '\'' +
-                ", positionType='" + positionType + '\'' +
-                ", url='" + url + '\'' +
-                ", dateCreated='" + dateCreated + '\'' +
-                ", company='" + company + '\'' +
-                ", companyurl='" + companyurl + '\'' +
-                ", location='" + location + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", howToApply='" + howToApply + '\'' +
-                ", companyLogoImageURL='" + companyLogoImageURL + '\'' +
-                '}';
+        return "" + id + positionType + dateCreated + company + companyurl + location + title + description + howToApply + companyLogoImageURL;
     }
 
     public String getId() {
