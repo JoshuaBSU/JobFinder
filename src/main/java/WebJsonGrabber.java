@@ -7,8 +7,8 @@ import java.util.*;
 public class WebJsonGrabber {
     public static void main(String[] args) {
         //Structs items
-        List<JobPost> jobLists = new ArrayList<>();
-        List<JobPost> temp = new ArrayList<>();
+        List<JobPost> jobLists = new ArrayList<JobPost>();
+        List<JobPost> temp = new ArrayList<JobPost>();
         URLDownloader downloader = new URLDownloader();
         String url = "https://jobs.github.com/positions.json?page=";
         int pageNumber = 1;
