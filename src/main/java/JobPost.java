@@ -1,54 +1,58 @@
 public class JobPost {
+
   private String id,
-      positionType,
-      url,
-      dateCreated,
-      company,
-      companyurl,
-      location,
-      title,
-      description,
-      howToApply,
-      companyLogoImageURL;
+          type,
+          url,
+          created_at,
+          company,
+          company_url,
+          location,
+          title,
+          description,
+          how_to_apply,
+          company_logo;
 
   public JobPost(
-      String id,
-      String positionType,
-      String url,
-      String dateCreated,
-      String company,
-      String companyurl,
-      String location,
-      String title,
-      String description,
-      String howToApply,
-      String companyLogoImageURL) {
+          String id,
+          String type,
+          String url,
+          String created_at,
+          String company,
+          String company_url,
+          String location,
+          String title,
+          String description,
+          String how_to_apply,
+          String company_logo)
+  {
     this.id = id;
-    this.positionType = positionType;
+    this.type = type;
     this.url = url;
-    this.dateCreated = dateCreated;
+    this.created_at = created_at;
     this.company = company;
-    this.companyurl = companyurl;
+    this.company_url = company_url;
     this.location = location;
     this.title = title;
     this.description = description;
-    this.howToApply = howToApply;
-    this.companyLogoImageURL = companyLogoImageURL;
+    this.how_to_apply = how_to_apply;
+    this.company_logo = company_logo;
   }
 
   @Override
   public String toString() {
-    return ""
-        + id
-        + positionType
-        + dateCreated
-        + company
-        + companyurl
-        + location
-        + title
-        + description
-        + howToApply
-        + companyLogoImageURL;
+    return "JobPost{" +
+            "id='" + id + '\'' +
+            ", type='" + type + '\'' +
+            ", url='" + url + '\'' +
+            ", created_at='" + created_at + '\'' +
+            ", company='" + company + '\'' +
+            ", company_url='" + company_url + '\'' +
+            ", location='" + location + '\'' +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", how_to_apply='" + how_to_apply + '\'' +
+            ", company_logo='" + company_logo + '\'' +
+            '}';
   }
 
   public String getId() {
@@ -59,12 +63,12 @@ public class JobPost {
     this.id = id;
   }
 
-  public String getPositionType() {
-    return positionType;
+  public String getType() {
+    return type;
   }
 
-  public void setPositionType(String positionType) {
-    this.positionType = positionType;
+  public void setType(String type) {
+    this.type = type;
   }
 
   public String getUrl() {
@@ -75,12 +79,12 @@ public class JobPost {
     this.url = url;
   }
 
-  public String getDateCreated() {
-    return dateCreated;
+  public String getCreated_at() {
+    return created_at;
   }
 
-  public void setDateCreated(String dateCreated) {
-    this.dateCreated = dateCreated;
+  public void setCreated_at(String created_at) {
+    this.created_at = created_at;
   }
 
   public String getCompany() {
@@ -91,12 +95,12 @@ public class JobPost {
     this.company = company;
   }
 
-  public String getCompanyurl() {
-    return companyurl;
+  public String getCompany_url() {
+    return company_url;
   }
 
-  public void setCompanyurl(String companyurl) {
-    this.companyurl = companyurl;
+  public void setCompany_url(String company_url) {
+    this.company_url = company_url;
   }
 
   public String getLocation() {
@@ -123,19 +127,20 @@ public class JobPost {
     this.description = description;
   }
 
-  public String getHowToApply() {
-    return howToApply;
+  public String getHow_to_apply() {
+    return how_to_apply;
   }
 
-  public void setHowToApply(String howToApply) {
-    this.howToApply = howToApply;
+  public void setHow_to_apply(String how_to_apply) {
+    this.how_to_apply = how_to_apply;
   }
 
-  public String getCompanyLogoImageURL() {
-    return companyLogoImageURL;
+  public String getCompany_logo() {
+    return company_logo;
   }
 
-  public void setCompanyLogoImageURL(String companyLogoImageURL) {
-    this.companyLogoImageURL = companyLogoImageURL;
+  public void setCompany_logo(String company_logo) {
+    this.company_logo = company_logo;
   }
+
 }
