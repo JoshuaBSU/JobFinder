@@ -1,6 +1,5 @@
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,8 +29,7 @@ public class URLDownloader {
     return "Try and Catch Failure";
   }
 
-  public List<JobPost> gitJsonToList(Gson gson,String url)
-  {
+  public List<JobPost> gitJsonToList(Gson gson, String url) {
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<JobPost> temp = new ArrayList<JobPost>();
     int pageNumber = 1;
@@ -43,6 +41,5 @@ public class URLDownloader {
       pageNumber++;
     }
     return jobLists;
-
   }
 }
