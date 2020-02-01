@@ -1,7 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,10 +33,9 @@ public class WebJsonGrabber {
     }
 
     // Stores job info into 1 json file
-    try
-    {
+    try {
       gson.toJson(jobLists, new FileWriter("jobposts.json"));
-    }catch (IOException x){
+    } catch (IOException x) {
       x.printStackTrace();
     }
 
@@ -47,7 +45,7 @@ public class WebJsonGrabber {
       System.out.println("JobList Entry \n" + i);
       i++;
       System.out.println(jobList.getId());
-      //System.out.println(jobList.toString());
+      // System.out.println(jobList.toString());
       System.out.println(jobList.getCreated_at());
     }
   }

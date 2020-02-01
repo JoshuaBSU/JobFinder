@@ -1,30 +1,29 @@
 public class JobPost {
 
   private String id,
-          type,
-          url,
-          created_at,
-          company,
-          company_url,
-          location,
-          title,
-          description,
-          how_to_apply,
-          company_logo;
+      type,
+      url,
+      created_at,
+      company,
+      company_url,
+      location,
+      title,
+      description,
+      how_to_apply,
+      company_logo;
 
   public JobPost(
-          String id,
-          String type,
-          String url,
-          String created_at,
-          String company,
-          String company_url,
-          String location,
-          String title,
-          String description,
-          String how_to_apply,
-          String company_logo)
-  {
+      String id,
+      String type,
+      String url,
+      String created_at,
+      String company,
+      String company_url,
+      String location,
+      String title,
+      String description,
+      String how_to_apply,
+      String company_logo) {
     this.id = id;
     this.type = type;
     this.url = url;
@@ -40,19 +39,41 @@ public class JobPost {
 
   @Override
   public String toString() {
-    return "JobPost{" +
-            "id='" + id + '\'' +
-            ", type='" + type + '\'' +
-            ", url='" + url + '\'' +
-            ", created_at='" + created_at + '\'' +
-            ", company='" + company + '\'' +
-            ", company_url='" + company_url + '\'' +
-            ", location='" + location + '\'' +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", how_to_apply='" + how_to_apply + '\'' +
-            ", company_logo='" + company_logo + '\'' +
-            '}';
+    return "JobPost{"
+        + "id='"
+        + id
+        + '\''
+        + ", type='"
+        + type
+        + '\''
+        + ", url='"
+        + url
+        + '\''
+        + ", created_at='"
+        + created_at
+        + '\''
+        + ", company='"
+        + company
+        + '\''
+        + ", company_url='"
+        + company_url
+        + '\''
+        + ", location='"
+        + location
+        + '\''
+        + ", title='"
+        + title
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + ", how_to_apply='"
+        + how_to_apply
+        + '\''
+        + ", company_logo='"
+        + company_logo
+        + '\''
+        + '}';
   }
 
   public String getId() {
@@ -142,5 +163,4 @@ public class JobPost {
   public void setCompany_logo(String company_logo) {
     this.company_logo = company_logo;
   }
-
 }
