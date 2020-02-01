@@ -20,7 +20,6 @@ public class WebJsonGrabber {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();
-
         //test
 
         while(jsonData != null)
@@ -29,11 +28,6 @@ public class WebJsonGrabber {
             temp = gson.fromJson(jsonData, new TypeToken<List<JobPost>>() {}.getType());
             Optional.ofNullable(temp).ifPresent(jobLists::addAll);
             pageNumber++;
-        }
-
-        if (jsonData == null)
-        {
-            System.out.println("No more webpages to pull from");
         }
 
         int i = 0;
