@@ -1,5 +1,7 @@
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class URLDownloader {
   public String URLSelector(String urlAdress) {
