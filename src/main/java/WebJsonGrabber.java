@@ -1,6 +1,5 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,21 +17,20 @@ public class WebJsonGrabber {
     builder.setPrettyPrinting();
     Gson gson = builder.create();
 
-    //Fill joblists with every post formatted to the object
-    jobLists = downloader.gitJsonToList(gson,url);
+    // Fill joblists with every post formatted to the object
+    jobLists = downloader.gitJsonToList(gson, url);
 
     // Just Prints out Jobs
     for (JobPost jobList : jobLists) {
-      //System.out.println(jobList.getId());
+      // System.out.println(jobList.getId());
       System.out.println(jobList.toString());
-      //System.out.println(jobList.getCreated_at());
+      // System.out.println(jobList.getCreated_at());
     }
     // Stores job info into 1 json file
     fileWriter(gson, jobLists);
   }
 
-  public static void fileWriter(Gson gson, List<JobPost> jobLists)
-  {
+  public static void fileWriter(Gson gson, List<JobPost> jobLists) {
     try {
       gson.toJson(jobLists, new FileWriter("jobposts.json"));
     } catch (IOException x) {
