@@ -23,9 +23,7 @@ jobs:
     - name: Google Java Format
       uses: axel-op/googlejavaformat-action@v2.0.0
 
+  test:
     stage: test
-      script:
-        - gradle test
-      artifacts:
-        reports:
-          junit: build/test-results/test/**/TEST-*.xml
+    script:
+      - ./gradlew check
