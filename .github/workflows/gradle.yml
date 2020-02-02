@@ -22,8 +22,3 @@ jobs:
       
     - name: Google Java Format
       uses: axel-op/googlejavaformat-action@v2.0.0
-
-  test:
-    stage: test
-    script:
-      - ./gradlew check
