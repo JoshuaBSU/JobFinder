@@ -11,6 +11,7 @@ class WebJsonGrabberTest {
   void fileWriter()
   {
     //initialize
+    WebJsonGrabber run = new WebJsonGrabber();
     String jsontext = "";
     //job title from https://jobs.github.com/positions/4cd29974-e48b-11e8-8478-fb9810f86b79
     String knowJobTitle = "Software engineer (back end)";
