@@ -1,8 +1,9 @@
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
 class URLDownloaderTest {
   public String url = "https://jobs.github.com/positions.json?page=";
