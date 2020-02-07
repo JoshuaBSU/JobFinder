@@ -1,10 +1,9 @@
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class WebJsonGrabberTest {
 
@@ -13,17 +12,14 @@ class WebJsonGrabberTest {
     String[] a = new String[0];
     WebJsonGrabber.main(a);
     String jsontext = "";
-    //job title from https://jobs.github.com/positions/4cd29974-e48b-11e8-8478-fb9810f86b79
+    // job title from https://jobs.github.com/positions/4cd29974-e48b-11e8-8478-fb9810f86b79
     String knowJobTitle = "Software engineer (back end)";
-    try
-    {
+    try {
       jsontext = new String(Files.readAllBytes(Paths.get("jobposts.json")));
-    }
-    catch(IOException e)
-    {
+    } catch (IOException e) {
       e.printStackTrace();
     }
-    //boolean inFile = jsontext.indexOf(knowJobTitle);
+    // boolean inFile = jsontext.indexOf(knowJobTitle);
     assertTrue(jsontext.indexOf(knowJobTitle) >= 1);
   }
 }
