@@ -9,7 +9,7 @@ import java.util.List;
 public class WebJsonGrabber {
   public static void main(String[] args) throws IOException {
     // Initiates Variables
-    //looks good - comment to test workflow
+    // looks good - comment to test workflow
     Connection conn = null;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     URLDownloader downloader = new URLDownloader();
