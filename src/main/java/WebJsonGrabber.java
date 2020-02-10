@@ -1,6 +1,5 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,14 +19,13 @@ public class WebJsonGrabber {
     String url = "https://jobs.github.com/positions.json?page=";
     String dbLocation = "jdbc:sqlite:jobPosts.db";
 
-    //Check for the files existence
+    // Check for the files existence
     File dbFileCheck = new File("jobPosts.db");
-    if(!dbFileCheck.exists())
-    {
+    if (!dbFileCheck.exists()) {
       sqlDBManager.blankDBMaker(dbLocation);
     }
 
-    //basic table structure
+    // basic table structure
     String sqlCreate =
         "CREATE TABLE IF NOT EXISTS jobListings (\n"
             + " id text PRIMARY KEY,\n"
@@ -43,7 +41,7 @@ public class WebJsonGrabber {
             + " company_logo text\n"
             + " );";
 
-    //let this dbManager instance know what file to access
+    // let this dbManager instance know what file to access
     conn = sqlDBManager.dbConnection(dbLocation);
 
     // Create the initial fields in the db and establish a connection
@@ -57,9 +55,9 @@ public class WebJsonGrabber {
     // Fill job lists with every post formatted to the object
     jobLists = downloader.gitJsonToList(gson, url);
 
-    try{
-      sqlDBManager.gitJsonAddToDB(jobLists,conn);
-    }catch (SQLException e) {
+    try {
+      sqlDBManager.gitJsonAddToDB(jobLists, conn);
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
@@ -76,7 +74,7 @@ public class WebJsonGrabber {
     */
 
   }
-//unused from old code
+  // unused from old code
   public static void fileWriter(Gson gson, List<JobPost> jobLists) {
     try {
       gson.toJson(jobLists, new FileWriter("jobposts.json"));
