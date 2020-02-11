@@ -28,9 +28,10 @@ public class WebJsonGrabber {
     }
 
     //basic table structure
+    //added ignore to throw away duplicate primary ID
     String sqlCreate =
         "CREATE TABLE IF NOT EXISTS jobListings (\n"
-            + " id text PRIMARY KEY,\n"
+            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
             + " type text,\n"
             + " url text,\n"
             + " created_at text,\n"
@@ -62,6 +63,17 @@ public class WebJsonGrabber {
     }catch (SQLException e) {
       e.printStackTrace();
     }
+
+
+    //Close Connection for sanity sake
+    try {
+      conn.close();
+    }
+    catch (SQLException e){
+      System.out.println("Likely already closed");
+      e.printStackTrace();
+    }
+    //sqlDBManager.printFullDBKeys();
 
     /*
     // Just Prints out Jobs

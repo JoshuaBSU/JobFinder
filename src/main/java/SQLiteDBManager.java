@@ -1,3 +1,4 @@
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.List;
 
@@ -69,4 +70,80 @@ public class SQLiteDBManager {
             e.printStackTrace();
         }
     }
+
+//WIP
+    public boolean searchDBViaPrimaryKey(String key)
+    {
+        boolean ItemFound = false;
+        if (conn != null)
+        {
+            try {
+                Statement searchStatement = conn.createStatement();
+
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+
+        }
+        else
+        {
+            System.out.println("Connection was closed unexpectedly, exiting");
+            //System.exit(0);
+        }
+        return ItemFound;
+    }
+
+//Prints out all keys
+    public void printFullDBKeys()
+    {
+        String sqlStatement = "SELECT id FROM jobListings";
+        if (conn != null)
+        {
+
+            try {
+                Statement searchStatement = conn.createStatement();
+                ResultSet results = searchStatement.executeQuery(sqlStatement);
+                while(results.next())
+                {
+                    System.out.print(results.getString("id") + "\t");
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+
+        }
+        else
+        {
+            System.out.println("Connection was closed unexpectedly, exiting");
+            System.exit(0);
+        }
+    }
+    public boolean checkIfJobListByIDandURL(JobPost jobPostToCheck)
+    {
+        String sqlStatement = "SELECT id, type, url, created_at, company, company_url, location,title, description, how_to_apply, company_logo FROM jobListings";
+        if (conn != null)
+        {
+
+            try {
+                Statement searchStatement = conn.createStatement();
+                ResultSet results = searchStatement.executeQuery(sqlStatement);
+                while(results.next())
+                {
+                    if (results.getString("id").equals(jobPostToCheck.getId()) && results.getString("url").equals(jobPostToCheck.getUrl()))
+                    {
+                        return true;
+                    }
+                }
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            System.out.println("Connection was closed unexpectedly, exiting");
+            System.exit(0);
+        }
+        return false;
+    }
+
 }
