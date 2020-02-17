@@ -23,15 +23,14 @@ class URLDownloaderTest {
     // check we have at least 100 items
     assertTrue(minimumExpected < actual);
   }
+
   @Test
-  void stackXMLToList()
-  {
+  void stackXMLToList() {
     URLDownloader urlDownload = new URLDownloader();
     List<StackOverFlowJobPost> test = urlDownload.stackXMLToList(rssURL);
-    //make sure we are making a proper list~
+    // make sure we are making a proper list~
     int atLeast = 900;
     int actual = test.size();
     assertTrue(atLeast < actual);
-
   }
 }
