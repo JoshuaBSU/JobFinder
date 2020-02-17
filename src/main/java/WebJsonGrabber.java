@@ -9,14 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebJsonGrabber {
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     // Initiates Variables
     // looks good - comment to test workflow
-    Connection conn = null;
+    Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
+    List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
     URLDownloader downloader = new URLDownloader();
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
 
+    String rssURL = "https://stackoverflow.com/jobs/feed";
     String url = "https://jobs.github.com/positions.json?page=";
     String dbLocation = "jdbc:sqlite:jobPosts.db";
 
@@ -55,17 +57,26 @@ public class WebJsonGrabber {
     builder.setPrettyPrinting();
     Gson gson = builder.create();
 
-    // Fill job lists with every post formatted to the object
-    jobLists = downloader.gitJsonToList(gson, url);
 
+    // Fill job lists with every post formatted to the object for github and stackOverflow
+    jobLists = downloader.gitJsonToList(gson, url);
+    stackJobLists = downloader.stackXMLToList(rssURL);
+    //add git to DB
     try{
       sqlDBManager.gitJsonAddToDB(jobLists,conn);
     }catch (SQLException e) {
       e.printStackTrace();
     }
 
+    //Add Stack to DB
+    try{
+      sqlDBManager.stackXMLAddToDB(stackJobLists,conn);
+    }catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     //Close Connection for sanity sake
+    //DO NOT ACCESS DATABASE BELLOW THIS LINE WITHOUT REINITIALISING THE CONNECTION
     try {
       conn.close();
     }
@@ -73,15 +84,12 @@ public class WebJsonGrabber {
       System.out.println("Likely already closed");
       e.printStackTrace();
     }
+
+    //Post run test functions commented out
     //sqlDBManager.printFullDBKeys();
-
-    /*
-    // Just Prints out Jobs
-    for (JobPost jobList : jobLists) {
-      System.out.println(jobList.toString());
+    for (StackOverFlowJobPost test : stackJobLists) {
+      System.out.println(test.getCategory());
     }
-    */
-
     /*
     // Stores job info into 1 json file
     fileWriter(gson, jobLists);

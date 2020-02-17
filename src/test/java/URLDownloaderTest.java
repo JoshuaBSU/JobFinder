@@ -7,19 +7,31 @@ import org.junit.jupiter.api.Test;
 
 class URLDownloaderTest {
   public String url = "https://jobs.github.com/positions.json?page=";
+  public String rssURL = "https://stackoverflow.com/jobs/feed";
 
   @Test
   void gitJsonToList() {
     // setup for test
-    URLDownloader urldwnl = new URLDownloader();
+    URLDownloader urlDownload = new URLDownloader();
     GsonBuilder builder = new GsonBuilder();
     builder.setPrettyPrinting();
     Gson gson = builder.create();
-    List<JobPost> test = urldwnl.gitJsonToList(gson, url);
+    List<JobPost> test = urlDownload.gitJsonToList(gson, url);
     // expected
     int minimumExpected = 100;
     int actual = test.size();
-    // check we have atleast 100 items
+    // check we have at least 100 items
     assertTrue(minimumExpected < actual);
+  }
+  @Test
+  void stackXMLToList()
+  {
+    URLDownloader urlDownload = new URLDownloader();
+    List<StackOverFlowJobPost> test = urlDownload.stackXMLToList(rssURL);
+    //make sure we are making a proper list~
+    int atLeast = 900;
+    int actual = test.size();
+    assertTrue(atLeast < actual);
+
   }
 }

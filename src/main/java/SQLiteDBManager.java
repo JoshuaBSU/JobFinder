@@ -1,4 +1,3 @@
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.List;
 
@@ -50,6 +49,35 @@ public class SQLiteDBManager {
                     preparedStatement.setString(9, jobList.getDescription());
                     preparedStatement.setString(10, jobList.getHow_to_apply());
                     preparedStatement.setString(11, jobList.getCompany_logo());
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // WIP
+    public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList, Connection conn) throws SQLException {
+        // prepared statement
+        String sql =
+                "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            {
+                //nulled out some information to get it to fit with our current table
+                for (StackOverFlowJobPost stackJobs : stackJobList) {
+                    preparedStatement.setString(1, stackJobs.getGuid() );
+                    preparedStatement.setString(2, stackJobs.getCategory());
+                    preparedStatement.setString(3, stackJobs.getLink());
+                    preparedStatement.setString(4, stackJobs.getPubDate());
+                    preparedStatement.setString(5, stackJobs.getAuthor());
+                    preparedStatement.setString(6, null);
+                    preparedStatement.setString(7, stackJobs.getLocation());
+                    preparedStatement.setString(8, stackJobs.getTitle());
+                    preparedStatement.setString(9, stackJobs.getDescription());
+                    preparedStatement.setString(10, null);
+                    preparedStatement.setString(11, null);
                     preparedStatement.executeUpdate();
                 }
             }
