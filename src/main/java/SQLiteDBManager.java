@@ -146,7 +146,7 @@ public class SQLiteDBManager {
             System.exit(0);
         }
     }
-    public boolean checkIfJobListByIDandURL(JobPost jobPostToCheck)
+    public boolean checkIfJobListByID(String id)
     {
         String sqlStatement = "SELECT id, type, url, created_at, company, company_url, location,title, description, how_to_apply, company_logo FROM jobListings";
         if (conn != null)
@@ -157,7 +157,7 @@ public class SQLiteDBManager {
                 ResultSet results = searchStatement.executeQuery(sqlStatement);
                 while(results.next())
                 {
-                    if (results.getString("id").equals(jobPostToCheck.getId()) && results.getString("url").equals(jobPostToCheck.getUrl()))
+                    if (results.getString("id").equals(id))
                     {
                         return true;
                     }
