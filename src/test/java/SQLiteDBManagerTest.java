@@ -142,7 +142,7 @@ class SQLiteDBManagerTest {
     //known ID on Stack
     //https://stackoverflow.com/jobs/365102/consultor-implantador-software-sanitario-t%C3%A9cnico-tecnologia-y-personas-sl?a=1YrwiLzfQ8xO&so_medium=Talent&so_source=TalentApi
     String testID2 = "365102";
-    
+
     assertTrue(sqlDBManager.checkIfJobListByID(testID2));
 
   }
