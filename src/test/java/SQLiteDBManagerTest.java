@@ -139,12 +139,8 @@ class SQLiteDBManagerTest {
     //Known ID on git
     //https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
     String testID = "76de3634-906a-4572-a293-661c7178f24f";
-    //known ID on Stack
-    //https://stackoverflow.com/jobs/365102/consultor-implantador-software-sanitario-t%C3%A9cnico-tecnologia-y-personas-sl?a=1YrwiLzfQ8xO&so_medium=Talent&so_source=TalentApi
-    String testID2 = "365102";
 
-    assertTrue(sqlDBManager.checkIfJobListByID(testID2));
-
+    assertTrue(sqlDBManager.checkIfJobListByID(testID));
   }
 
   @Test
