@@ -83,9 +83,11 @@ public class WebJsonGrabber {
 
     // Post run test functions commented out
     // sqlDBManager.printFullDBKeys();
+    /*
     for (StackOverFlowJobPost test : stackJobLists) {
       System.out.println(test.getCategory());
     }
+    */
     /*
     // Stores job info into 1 json file
     fileWriter(gson, jobLists);
