@@ -139,15 +139,20 @@ class SQLiteDBManagerTest {
     //Known ID on git
     //https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
     String testID = "76de3634-906a-4572-a293-661c7178f24f";
+    //known ID on Stack
+    //https://stackoverflow.com/jobs/365391/senior-data-engineers-spark-scala-quieres-ser-indizen-technologies?a=1YxwRUeOQsX6&so_medium=Talent&so_source=TalentApi
+    String testID2 = "365391";
 
-    assertTrue(sqlDBManager.checkIfJobListByID(testID));
+    assertTrue(sqlDBManager.checkIfJobListByID(testID) && sqlDBManager.checkIfJobListByID(testID2));
   }
 
   @Test
   void SQLTableCheck() throws IOException {
+    /*
     String[] a = new String[0];
     WebJsonGrabber test = new WebJsonGrabber();
     WebJsonGrabber.main(a);
+    */
 
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
     String dbLocation = "jdbc:sqlite:jobPosts.db";

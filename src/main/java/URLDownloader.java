@@ -3,6 +3,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,24 @@ public class URLDownloader {
   public String URLSelector(String urlAddress) {
     // Pulled from networking section of docs.oracle.com/javase
     try {
-
       URL url = new URL(urlAddress);
+      int retry = 3;
+      HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+      do
+      {
+        //implementing retry function for http connection
+        System.out.println("Connection Busy, retrying in 5 seconds: "+ retry);
+        TimeUnit.SECONDS.sleep(5);
+        urlConnection = (HttpURLConnection) url.openConnection();
+        retry--;
+      }
+      while( (urlConnection.getResponseCode() == 503) && retry > 0);
+      if (retry == 0)
+      {
+        System.out.println("Too many connection attempts failed closing application");
+        System.exit(0);
+      }
+
       InputStreamReader connStream = new InputStreamReader(url.openStream());
       BufferedReader in = new BufferedReader(connStream);
       String inputLine;
@@ -31,7 +48,7 @@ public class URLDownloader {
         return null;
       }
       return jsonData.toString();
-    } catch (IOException e1) {
+    } catch (IOException | InterruptedException e1) {
       e1.printStackTrace();
     }
     return "";
@@ -60,7 +77,24 @@ public class URLDownloader {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
-      Document document = builder.parse(new URL(urlAddress).openStream());
+      URL url = new URL(urlAddress);
+      int retry = 3;
+      HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+      do
+      {
+        //implementing retry function for http connection
+        System.out.println("Connection Busy, retrying in 5 seconds: "+ retry);
+        TimeUnit.SECONDS.sleep(5);
+        urlConnection = (HttpURLConnection) url.openConnection();
+        retry--;
+      }
+      while( (urlConnection.getResponseCode() == 503) && retry > 0);
+      if (retry == 0)
+      {
+        System.out.println("Too many connection attempts failed closing application");
+        System.exit(0);
+      }
+      Document document = builder.parse(url.openStream());
       // Fixes some issues allegedly
       document.getDocumentElement().normalize();
       NodeList nList = document.getElementsByTagName("item");
@@ -108,7 +142,7 @@ public class URLDownloader {
         }
       }
 
-    } catch (IOException | ParserConfigurationException | SAXException e) {
+    } catch (IOException | ParserConfigurationException | SAXException | InterruptedException e) {
       e.printStackTrace();
     }
     return stackJobLists;
