@@ -144,11 +144,9 @@ class SQLiteDBManagerTest {
 
   @Test
   void SQLTableCheck() throws IOException {
-    /*
     String[] a = new String[0];
     WebJsonGrabber test = new WebJsonGrabber();
     WebJsonGrabber.main(a);
-    */
 
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
     String dbLocation = "jdbc:sqlite:jobPosts.db";
