@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,8 +18,10 @@ public class URLDownloader {
   public String URLSelector(String urlAddress) {
     // Pulled from networking section of docs.oracle.com/javase
     try {
+
       URL url = new URL(urlAddress);
-      BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+      InputStreamReader connStream = new InputStreamReader(url.openStream());
+      BufferedReader in = new BufferedReader(connStream);
       String inputLine;
       StringBuilder jsonData = new StringBuilder();
       while ((inputLine = in.readLine()) != null) jsonData.append(inputLine);
