@@ -45,10 +45,10 @@ public class WebJsonGrabber {
             + " );";
 
     // let this dbManager instance know what file to access
-    conn = sqlDBManager.dbConnection(dbLocation);
+    sqlDBManager.dbConnection(dbLocation);
 
     // Create the initial fields in the db and establish a connection
-    sqlDBManager.dbManager(dbLocation, sqlCreate, conn);
+    sqlDBManager.dbManager(sqlCreate);
 
     // Gson Configuration
     GsonBuilder builder = new GsonBuilder();
@@ -60,24 +60,15 @@ public class WebJsonGrabber {
     stackJobLists = downloader.stackXMLToList(rssURL);
     // add git to DB
     try {
-      sqlDBManager.gitJsonAddToDB(jobLists, conn);
+      sqlDBManager.gitJsonAddToDB(jobLists);
     } catch (SQLException e) {
       e.printStackTrace();
     }
 
     // Add Stack to DB
     try {
-      sqlDBManager.stackXMLAddToDB(stackJobLists, conn);
+      sqlDBManager.stackXMLAddToDB(stackJobLists);
     } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    // Close Connection for sanity sake
-    // DO NOT ACCESS DATABASE BELLOW THIS LINE WITHOUT REINITIALISING THE CONNECTION
-    try {
-      conn.close();
-    } catch (SQLException e) {
-      System.out.println("Likely already closed");
       e.printStackTrace();
     }
 

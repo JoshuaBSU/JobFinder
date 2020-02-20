@@ -5,7 +5,7 @@ public class SQLiteDBManager {
   private Connection conn = null;
 
   // creates a connection and returns it so we can manually close if needed.
-  public Connection dbConnection(String dbLocation) {
+  public void dbConnection(String dbLocation) {
     try {
       // Setting up forName so commands don't get thrown into an error
       Class.forName("org.sqlite.JDBC");
@@ -14,11 +14,23 @@ public class SQLiteDBManager {
     } catch (SQLException | ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  public Connection getConnection()
+  {
     return conn;
   }
 
+  public void dbConnectionClose(){
+    try{
+      conn.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
   // Send commands to DB without any return information
-  public void dbManager(String dbLocation, String sqlCommand, Connection conn) {
+  public void dbManager(String sqlCommand) {
     try {
       // create connection and statement
       Statement statement = conn.createStatement();
@@ -30,7 +42,7 @@ public class SQLiteDBManager {
   }
 
   // Lets us add git formatted lists into our db
-  public void gitJsonAddToDB(List<JobPost> jobLists, Connection conn) throws SQLException {
+  public void gitJsonAddToDB(List<JobPost> jobLists) throws SQLException {
     // prepared statement
     String sql =
         "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
@@ -58,7 +70,7 @@ public class SQLiteDBManager {
   }
 
   // WIP
-  public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList, Connection conn)
+  public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList)
       throws SQLException {
     // prepared statement
     String sql =
@@ -97,24 +109,6 @@ public class SQLiteDBManager {
     } catch (SQLException | ClassNotFoundException e) {
       e.printStackTrace();
     }
-  }
-
-  // WIP
-  public boolean searchDBViaPrimaryKey(String key) {
-    boolean ItemFound = false;
-    if (conn != null) {
-      try {
-        Statement searchStatement = conn.createStatement();
-
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-
-    } else {
-      System.out.println("Connection was closed unexpectedly, exiting");
-      // System.exit(0);
-    }
-    return ItemFound;
   }
 
   // Prints out all keys

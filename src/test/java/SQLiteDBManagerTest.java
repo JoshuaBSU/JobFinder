@@ -18,7 +18,7 @@ class SQLiteDBManagerTest {
   @Test
   // check if a good data exists when passed in
   void SQLiteDBManager_GoodData() {
-    Connection conn = null;
+    Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
     // make a test db since we are adding fake data
@@ -46,13 +46,13 @@ class SQLiteDBManagerTest {
             + " );";
 
     // let this dbManager instance know what file to access
-    conn = sqlDBManager.dbConnection(dbLocation);
+    sqlDBManager.dbConnection(dbLocation);
 
     // Create the initial fields in the db and establish a connection
-    sqlDBManager.dbManager(dbLocation, sqlCreate, conn);
+    sqlDBManager.dbManager(sqlCreate);
 
     try {
-      sqlDBManager.gitJsonAddToDB(jobLists, conn);
+      sqlDBManager.gitJsonAddToDB(jobLists);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -62,7 +62,7 @@ class SQLiteDBManagerTest {
             "test", "test", "test", "test", "test", "test", "test", "test", "test", "test", "test");
     jobLists.add(jobPostTest);
     try {
-      sqlDBManager.gitJsonAddToDB(jobLists, conn);
+      sqlDBManager.gitJsonAddToDB(jobLists);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -72,22 +72,27 @@ class SQLiteDBManagerTest {
 
   // check for a known stack overflow id
   @Test
-  void SQLiteDBManager_StackOverflowData_ShouldPass() {
-    Connection conn;
+  void SQLiteDBManager_GitHub_ShouldPass() {
+    Connection conn = null;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
     URLDownloader downloader = new URLDownloader();
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
 
-    String rssURL = "https://stackoverflow.com/jobs/feed";
-    String dbLocation = "jdbc:sqlite:jobPostsTestScan.db";
+
+    String url = "https://jobs.github.com/positions.json?page=";
+    String dbLocation = "jdbc:sqlite:jobPostsTest1.db";
 
 
     // Check for the files existence
-    File dbFileCheck = new File("jobPostsTestScan.db");
+    File dbFileCheck = new File("jobPostsTest1.db");
     if (!dbFileCheck.exists()) {
       sqlDBManager.blankDBMaker(dbLocation);
     }
+
+    GsonBuilder builder = new GsonBuilder();
+    builder.setPrettyPrinting();
+    Gson gson = builder.create();
 
     // basic table structure
     // added ignore to throw away duplicate primary ID
@@ -107,29 +112,23 @@ class SQLiteDBManagerTest {
             + " );";
 
     // let this dbManager instance know what file to access
-    conn = sqlDBManager.dbConnection(dbLocation);
+    sqlDBManager.dbConnection(dbLocation);
 
     // Create the initial fields in the db and establish a connection
-    sqlDBManager.dbManager(dbLocation, sqlCreate, conn);
-
-    // Gson Configuration
-    GsonBuilder builder = new GsonBuilder();
-    builder.setPrettyPrinting();
-    Gson gson = builder.create();
+    sqlDBManager.dbManager(sqlCreate);
 
     // Fill job lists with every post formatted to the object for github and stackOverflow
-    stackJobLists = downloader.stackXMLToList(rssURL);
+    jobLists = downloader.gitJsonToList(gson, url);
 
     // Add Stack to DB
     try {
-      sqlDBManager.stackXMLAddToDB(stackJobLists, conn);
+      sqlDBManager.gitJsonAddToDB(jobLists);
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    //known ID on Stack
-    //https://stackoverflow.com/jobs/365391/senior-data-engineers-spark-scala-quieres-ser-indizen-technologies?a=1YxwRUeOQsX6&so_medium=Talent&so_source=TalentApi
-    String testID = "365391";
-
+    //Known ID on git
+    //https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
+    String testID = "76de3634-906a-4572-a293-661c7178f24f";
     assertTrue(sqlDBManager.checkIfJobListByID(testID));
   }
 
@@ -138,8 +137,8 @@ class SQLiteDBManagerTest {
     //test if we make a table properly
 
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
-    String dbLocation = "jdbc:sqlite:jobPoststests.db";
-    Connection conn = sqlDBManager.dbConnection(dbLocation);
+    String dbLocation = "jdbc:sqlite:tableCheck.db";
+    sqlDBManager.dbConnection(dbLocation);
     String sqlCreate =
             "CREATE TABLE IF NOT EXISTS jobListings (\n"
                     + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
@@ -154,12 +153,14 @@ class SQLiteDBManagerTest {
                     + " how_to_apply text,\n"
                     + " company_logo text\n"
                     + " );";
-    File dbFileCheck = new File("jobPoststests.db");
+    File dbFileCheck = new File("tableCheck.db");
     if (!dbFileCheck.exists()) {
       sqlDBManager.blankDBMaker(dbLocation);
     }
-    conn = sqlDBManager.dbConnection(dbLocation);
-    sqlDBManager.dbManager(dbLocation,sqlCreate,conn);
+    sqlDBManager.dbConnection(dbLocation);
+    sqlDBManager.dbManager(sqlCreate);
+
+    Connection conn = sqlDBManager.getConnection();
 
     boolean tableExists = false;
     try {
@@ -175,40 +176,4 @@ class SQLiteDBManagerTest {
     conn.close();
     assertTrue(tableExists);
   }
-  /*
-  @Test(expected=NullPointerException.class)
-  void SQLiteDBManager_BadData_ShouldFail() throws SQLException {
-    //null fields
-    List<StackOverFlowJobPost> badDataList = new ArrayList<StackOverFlowJobPost>();
-    StackOverFlowJobPost badData = new StackOverFlowJobPost();
-    badDataList.add(badData);
-
-    SQLiteDBManager sqlDBManager = new SQLiteDBManager();
-    String dbLocation = "jdbc:sqlite:jobPoststests.db";
-    Connection conn = sqlDBManager.dbConnection(dbLocation);
-    String sqlCreate =
-            "CREATE TABLE IF NOT EXISTS jobListings (\n"
-                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-                    + " type text,\n"
-                    + " url text,\n"
-                    + " created_at text,\n"
-                    + " company text,\n"
-                    + " company_url text,\n"
-                    + " location text,\n"
-                    + " title text,\n"
-                    + " description text,\n"
-                    + " how_to_apply text,\n"
-                    + " company_logo text\n"
-                    + " );";
-    File dbFileCheck = new File("jobPoststests.db");
-    if (!dbFileCheck.exists()) {
-      sqlDBManager.blankDBMaker(dbLocation);
-    }
-    conn = sqlDBManager.dbConnection(dbLocation);
-    sqlDBManager.dbManager(dbLocation,sqlCreate,conn);
-
-    sqlDBManager.stackXMLAddToDB(badDataList, conn);
-  }
-
-   */
 }
