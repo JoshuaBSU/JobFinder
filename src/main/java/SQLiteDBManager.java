@@ -16,13 +16,12 @@ public class SQLiteDBManager {
     }
   }
 
-  public Connection getConnection()
-  {
+  public Connection getConnection() {
     return conn;
   }
 
-  public void dbConnectionClose(){
-    try{
+  public void dbConnectionClose() {
+    try {
       conn.close();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -70,8 +69,7 @@ public class SQLiteDBManager {
   }
 
   // WIP
-  public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList)
-      throws SQLException {
+  public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList) throws SQLException {
     // prepared statement
     String sql =
         "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo) VALUES(?,?,?,?,?,?,?,?,?,?,?)";

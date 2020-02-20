@@ -1,5 +1,4 @@
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 class SQLiteDBManagerTest {
@@ -79,10 +77,8 @@ class SQLiteDBManagerTest {
     URLDownloader downloader = new URLDownloader();
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
 
-
     String url = "https://jobs.github.com/positions.json?page=";
     String dbLocation = "jdbc:sqlite:jobPostsTest1.db";
-
 
     // Check for the files existence
     File dbFileCheck = new File("jobPostsTest1.db");
@@ -126,33 +122,33 @@ class SQLiteDBManagerTest {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    //Known ID on git
-    //https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
+    // Known ID on git
+    // https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
     String testID = "76de3634-906a-4572-a293-661c7178f24f";
     assertTrue(sqlDBManager.checkIfJobListByID(testID));
   }
 
   @Test
   void SQLiteDBManager_TableCheck_ShouldPass() throws IOException, SQLException {
-    //test if we make a table properly
+    // test if we make a table properly
 
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
     String dbLocation = "jdbc:sqlite:tableCheck.db";
     sqlDBManager.dbConnection(dbLocation);
     String sqlCreate =
-            "CREATE TABLE IF NOT EXISTS jobListings (\n"
-                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-                    + " type text,\n"
-                    + " url text,\n"
-                    + " created_at text,\n"
-                    + " company text,\n"
-                    + " company_url text,\n"
-                    + " location text,\n"
-                    + " title text,\n"
-                    + " description text,\n"
-                    + " how_to_apply text,\n"
-                    + " company_logo text\n"
-                    + " );";
+        "CREATE TABLE IF NOT EXISTS jobListings (\n"
+            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+            + " type text,\n"
+            + " url text,\n"
+            + " created_at text,\n"
+            + " company text,\n"
+            + " company_url text,\n"
+            + " location text,\n"
+            + " title text,\n"
+            + " description text,\n"
+            + " how_to_apply text,\n"
+            + " company_logo text\n"
+            + " );";
     File dbFileCheck = new File("tableCheck.db");
     if (!dbFileCheck.exists()) {
       sqlDBManager.blankDBMaker(dbLocation);

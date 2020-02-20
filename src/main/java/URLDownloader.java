@@ -22,17 +22,14 @@ public class URLDownloader {
       URL url = new URL(urlAddress);
       int retry = 3;
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-      do
-      {
-        //implementing retry function for http connection
-        System.out.println("Connection Busy, retrying in 5 seconds: "+ retry);
+      do {
+        // implementing retry function for http connection
+        System.out.println("Connection Busy, retrying in 5 seconds: " + retry);
         TimeUnit.SECONDS.sleep(5);
         urlConnection = (HttpURLConnection) url.openConnection();
         retry--;
-      }
-      while( (urlConnection.getResponseCode() == 503) && retry > 0);
-      if (retry == 0)
-      {
+      } while ((urlConnection.getResponseCode() == 503) && retry > 0);
+      if (retry == 0) {
         System.out.println("Too many connection attempts failed closing application");
         System.exit(0);
       }
@@ -80,17 +77,14 @@ public class URLDownloader {
       URL url = new URL(urlAddress);
       int retry = 3;
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-      do
-      {
-        //implementing retry function for http connection
-        System.out.println("Connection Busy, retrying in 5 seconds: "+ retry);
+      do {
+        // implementing retry function for http connection
+        System.out.println("Connection Busy, retrying in 5 seconds: " + retry);
         TimeUnit.SECONDS.sleep(5);
         urlConnection = (HttpURLConnection) url.openConnection();
         retry--;
-      }
-      while( (urlConnection.getResponseCode() == 503) && retry > 0);
-      if (retry == 0)
-      {
+      } while ((urlConnection.getResponseCode() == 503) && retry > 0);
+      if (retry == 0) {
         System.out.println("Too many connection attempts failed closing application");
         System.exit(0);
       }
