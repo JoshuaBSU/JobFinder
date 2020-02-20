@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,9 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 
 class SQLiteDBManagerTest {
@@ -69,10 +68,9 @@ class SQLiteDBManagerTest {
     assertTrue(testForID);
   }
 
-  //check for a known stack overflow id
+  // check for a known stack overflow id
   @Test
-  void SQLTableCheckStackOverflow()
-  {
+  void SQLTableCheckStackOverflow() {
     Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
@@ -83,31 +81,30 @@ class SQLiteDBManagerTest {
     String url = "https://jobs.github.com/positions.json?page=";
     String dbLocation = "jdbc:sqlite:jobPostsTestScan.db";
 
-    //Check for the files existence
+    // Check for the files existence
     File dbFileCheck = new File("jobPosts.db");
-    if(!dbFileCheck.exists())
-    {
+    if (!dbFileCheck.exists()) {
       sqlDBManager.blankDBMaker(dbLocation);
     }
 
-    //basic table structure
-    //added ignore to throw away duplicate primary ID
+    // basic table structure
+    // added ignore to throw away duplicate primary ID
     String sqlCreate =
-            "CREATE TABLE IF NOT EXISTS jobListings (\n"
-                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-                    + " type text,\n"
-                    + " url text,\n"
-                    + " created_at text,\n"
-                    + " company text,\n"
-                    + " company_url text,\n"
-                    + " location text,\n"
-                    + " title text,\n"
-                    + " description text,\n"
-                    + " how_to_apply text,\n"
-                    + " company_logo text\n"
-                    + " );";
+        "CREATE TABLE IF NOT EXISTS jobListings (\n"
+            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+            + " type text,\n"
+            + " url text,\n"
+            + " created_at text,\n"
+            + " company text,\n"
+            + " company_url text,\n"
+            + " location text,\n"
+            + " title text,\n"
+            + " description text,\n"
+            + " how_to_apply text,\n"
+            + " company_logo text\n"
+            + " );";
 
-    //let this dbManager instance know what file to access
+    // let this dbManager instance know what file to access
     conn = sqlDBManager.dbConnection(dbLocation);
 
     // Create the initial fields in the db and establish a connection
@@ -118,26 +115,25 @@ class SQLiteDBManagerTest {
     builder.setPrettyPrinting();
     Gson gson = builder.create();
 
-
     // Fill job lists with every post formatted to the object for github and stackOverflow
     jobLists = downloader.gitJsonToList(gson, url);
     stackJobLists = downloader.stackXMLToList(rssURL);
-    //add git to DB
-    try{
-      sqlDBManager.gitJsonAddToDB(jobLists,conn);
-    }catch (SQLException e) {
+    // add git to DB
+    try {
+      sqlDBManager.gitJsonAddToDB(jobLists, conn);
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
-    //Add Stack to DB
-    try{
-      sqlDBManager.stackXMLAddToDB(stackJobLists,conn);
-    }catch (SQLException e) {
+    // Add Stack to DB
+    try {
+      sqlDBManager.stackXMLAddToDB(stackJobLists, conn);
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
-    //Known ID on git
-    //https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
+    // Known ID on git
+    // https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
     String testID = "76de3634-906a-4572-a293-661c7178f24f";
 
     assertTrue(sqlDBManager.checkIfJobListByID(testID));
