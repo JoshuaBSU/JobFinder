@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +25,8 @@ public class URLDownloader {
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
       do {
         // implementing retry function for http connection
-        System.out.println("Connection Busy, retrying in 5 seconds: " + retry);
-        TimeUnit.SECONDS.sleep(5);
+        System.out.println("Github Connection Busy, retrying in 3 seconds, Attempts left: " + retry);
+        TimeUnit.SECONDS.sleep(3);
         urlConnection = (HttpURLConnection) url.openConnection();
         retry--;
       } while ((urlConnection.getResponseCode() == 503) && retry > 0);
@@ -34,7 +35,7 @@ public class URLDownloader {
         System.exit(0);
       }
 
-      InputStreamReader connStream = new InputStreamReader(url.openStream());
+      InputStreamReader connStream = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
       BufferedReader in = new BufferedReader(connStream);
       String inputLine;
       StringBuilder jsonData = new StringBuilder();
@@ -79,7 +80,7 @@ public class URLDownloader {
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
       do {
         // implementing retry function for http connection
-        System.out.println("Connection Busy, retrying in 5 seconds: " + retry);
+        System.out.println("StackOverflow Connection Busy, retrying in 5 seconds, attempts left: " + retry);
         TimeUnit.SECONDS.sleep(5);
         urlConnection = (HttpURLConnection) url.openConnection();
         retry--;

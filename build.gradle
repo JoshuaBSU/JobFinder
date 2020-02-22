@@ -1,3 +1,4 @@
+
 plugins {
     id 'java'
 }
@@ -11,12 +12,14 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 sourceCompatibility = 11
 
-configurations {
-    jaxb
-}
 
 repositories {
     mavenCentral()
+    jcenter()
+}
+
+ext {
+    jxBrowserVersion = '7.5'
 }
 
 dependencies {
@@ -26,6 +29,10 @@ dependencies {
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
     implementation 'org.jetbrains:annotations:15.0'
     compile group: 'org.json', name: 'json', version: '20190722'
+    compile group: 'com.google.maps', name: 'google-maps-services', version: '0.11.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.25'
+
+
 
 }
 

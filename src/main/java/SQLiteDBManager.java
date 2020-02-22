@@ -1,5 +1,5 @@
 import java.sql.*;
-import java.util.List;
+import java.util.*;
 
 public class SQLiteDBManager {
   private Connection conn = null;
@@ -44,7 +44,7 @@ public class SQLiteDBManager {
   public void gitJsonAddToDB(List<JobPost> jobLists) throws SQLException {
     // prepared statement
     String sql =
-        "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo,category,coordinates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     try {
       PreparedStatement preparedStatement = conn.prepareStatement(sql);
       {
@@ -60,6 +60,8 @@ public class SQLiteDBManager {
           preparedStatement.setString(9, jobList.getDescription());
           preparedStatement.setString(10, jobList.getHow_to_apply());
           preparedStatement.setString(11, jobList.getCompany_logo());
+          preparedStatement.setString(12, null);
+          preparedStatement.setString(13, null);
           preparedStatement.executeUpdate();
         }
       }
@@ -72,14 +74,14 @@ public class SQLiteDBManager {
   public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList) throws SQLException {
     // prepared statement
     String sql =
-        "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+            "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo,category,coordinates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     try {
       PreparedStatement preparedStatement = conn.prepareStatement(sql);
       {
         // nulled out some information to get it to fit with our current table
         for (StackOverFlowJobPost stackJobs : stackJobList) {
           preparedStatement.setString(1, stackJobs.getGuid());
-          preparedStatement.setString(2, stackJobs.getCategory());
+          preparedStatement.setString(2, null);
           preparedStatement.setString(3, stackJobs.getLink());
           preparedStatement.setString(4, stackJobs.getPubDate());
           preparedStatement.setString(5, stackJobs.getAuthor());
@@ -89,6 +91,8 @@ public class SQLiteDBManager {
           preparedStatement.setString(9, stackJobs.getDescription());
           preparedStatement.setString(10, null);
           preparedStatement.setString(11, null);
+          preparedStatement.setString(12, stackJobs.getCategory());
+          preparedStatement.setString(13, null);
           preparedStatement.executeUpdate();
         }
       }
@@ -132,7 +136,7 @@ public class SQLiteDBManager {
 
   public boolean checkIfJobListByID(String id) {
     String sqlStatement =
-        "SELECT id, type, url, created_at, company, company_url, location,title, description, how_to_apply, company_logo FROM jobListings";
+        "SELECT id, type, url, created_at, company, company_url, location,title, description, how_to_apply, company_logo, category, coordinates FROM jobListings";
     if (conn != null) {
 
       try {
@@ -152,4 +156,52 @@ public class SQLiteDBManager {
     }
     return false;
   }
+  // Creating a hashmap for all the locations to cut down on queries to a geoCoder
+  public void getUniqueLocations()
+  {
+    Map<String, String> uniqueLocations = new HashMap<String, String>();
+    String sqlStatement =
+            "SELECT location, coordinates FROM jobListings";
+    if (conn != null) {
+
+      try {
+        Statement searchStatement = conn.createStatement();
+        ResultSet results = searchStatement.executeQuery(sqlStatement);
+        while (results.next()) {
+          results.getString("location");
+          if ( results.getString("coordinates") == null && uniqueLocations.get(results.getString("location")) == null && (results.getString("location") != null) && !(results.getString("location").contains("remote")))
+          {
+            uniqueLocations.put(results.getString("location"),geoCoder( results.getString("location")));
+          }
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      System.out.println("Connection was closed unexpectedly, exiting");
+      System.exit(0);
+    }
+    //quick test
+    int countOfTotalLocations = 0;
+
+    for (Map.Entry<String, String> entry : uniqueLocations.entrySet()) {
+      String key = entry.getKey();
+      Object val = entry.getValue();
+      System.out.println("Test our hashmap :" + key + "  "+ val);
+      countOfTotalLocations++;
+    }
+    System.out.println(countOfTotalLocations);
+  }
+  //our intermediary between the hashmap and GeoCoder
+  public String geoCoder(String location)
+  {
+    UniqueGeoCoder encoding = new UniqueGeoCoder();
+    return encoding.Forward(location);
+  }
+
+  public void updateCoordinates()
+  {
+
+  }
+
 }

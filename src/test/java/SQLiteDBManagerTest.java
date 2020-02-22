@@ -29,19 +29,21 @@ class SQLiteDBManagerTest {
     // basic table structure
     // added ignore to throw away duplicate primary ID
     String sqlCreate =
-        "CREATE TABLE IF NOT EXISTS jobListings (\n"
-            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-            + " type text,\n"
-            + " url text,\n"
-            + " created_at text,\n"
-            + " company text,\n"
-            + " company_url text,\n"
-            + " location text,\n"
-            + " title text,\n"
-            + " description text,\n"
-            + " how_to_apply text,\n"
-            + " company_logo text\n"
-            + " );";
+            "CREATE TABLE IF NOT EXISTS jobListings (\n"
+                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+                    + " type text,\n"
+                    + " url text,\n"
+                    + " created_at text,\n"
+                    + " company text,\n"
+                    + " company_url text,\n"
+                    + " location text,\n"
+                    + " title text,\n"
+                    + " description text,\n"
+                    + " how_to_apply text,\n"
+                    + " company_logo text,\n"
+                    + " category text,\n"
+                    + " coordinates text\n"
+                    + " );";
 
     // let this dbManager instance know what file to access
     sqlDBManager.dbConnection(dbLocation);
@@ -93,19 +95,21 @@ class SQLiteDBManagerTest {
     // basic table structure
     // added ignore to throw away duplicate primary ID
     String sqlCreate =
-        "CREATE TABLE IF NOT EXISTS jobListings (\n"
-            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-            + " type text,\n"
-            + " url text,\n"
-            + " created_at text,\n"
-            + " company text,\n"
-            + " company_url text,\n"
-            + " location text,\n"
-            + " title text,\n"
-            + " description text,\n"
-            + " how_to_apply text,\n"
-            + " company_logo text\n"
-            + " );";
+            "CREATE TABLE IF NOT EXISTS jobListings (\n"
+                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+                    + " type text,\n"
+                    + " url text,\n"
+                    + " created_at text,\n"
+                    + " company text,\n"
+                    + " company_url text,\n"
+                    + " location text,\n"
+                    + " title text,\n"
+                    + " description text,\n"
+                    + " how_to_apply text,\n"
+                    + " company_logo text,\n"
+                    + " category text,\n"
+                    + " coordinates text\n"
+                    + " );";
 
     // let this dbManager instance know what file to access
     sqlDBManager.dbConnection(dbLocation);
@@ -136,19 +140,21 @@ class SQLiteDBManagerTest {
     String dbLocation = "jdbc:sqlite:tableCheck.db";
     sqlDBManager.dbConnection(dbLocation);
     String sqlCreate =
-        "CREATE TABLE IF NOT EXISTS jobListings (\n"
-            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-            + " type text,\n"
-            + " url text,\n"
-            + " created_at text,\n"
-            + " company text,\n"
-            + " company_url text,\n"
-            + " location text,\n"
-            + " title text,\n"
-            + " description text,\n"
-            + " how_to_apply text,\n"
-            + " company_logo text\n"
-            + " );";
+            "CREATE TABLE IF NOT EXISTS jobListings (\n"
+                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+                    + " type text,\n"
+                    + " url text,\n"
+                    + " created_at text,\n"
+                    + " company text,\n"
+                    + " company_url text,\n"
+                    + " location text,\n"
+                    + " title text,\n"
+                    + " description text,\n"
+                    + " how_to_apply text,\n"
+                    + " company_logo text,\n"
+                    + " category text,\n"
+                    + " coordinates text\n"
+                    + " );";
     File dbFileCheck = new File("tableCheck.db");
     if (!dbFileCheck.exists()) {
       sqlDBManager.blankDBMaker(dbLocation);

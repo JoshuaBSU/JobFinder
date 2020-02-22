@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,14 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebJsonGrabber {
-  public static void main(String[] args) {
+  public static void main(String[] args)
+  {
     // Initiates Variables
     // looks good - comment to test workflow
+
+    //bool vars to help smooth out compile times when certain modules don't need to run
+    boolean runDownloaders = false;
+    boolean runGeoCoder = true;
+    //moved database and list calls into new function to visually split gui and geocoder
+    PrimaryCode(runDownloaders,runGeoCoder);
+    //MapGUI test = new MapGUI();
+    //test.WindowMaker();
+  }
+
+  public static void PrimaryCode(boolean runWebScrapper, boolean runGeoCoder)
+  {
     Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
     URLDownloader downloader = new URLDownloader();
     SQLiteDBManager sqlDBManager = new SQLiteDBManager();
+    MapGUI test = new MapGUI();
+
+    //test.WindowMaker();
 
     String rssURL = "https://stackoverflow.com/jobs/feed";
     String url = "https://jobs.github.com/positions.json?page=";
@@ -30,19 +47,21 @@ public class WebJsonGrabber {
     // basic table structure
     // added ignore to throw away duplicate primary ID
     String sqlCreate =
-        "CREATE TABLE IF NOT EXISTS jobListings (\n"
-            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-            + " type text,\n"
-            + " url text,\n"
-            + " created_at text,\n"
-            + " company text,\n"
-            + " company_url text,\n"
-            + " location text,\n"
-            + " title text,\n"
-            + " description text,\n"
-            + " how_to_apply text,\n"
-            + " company_logo text\n"
-            + " );";
+            "CREATE TABLE IF NOT EXISTS jobListings (\n"
+                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+                    + " type text,\n"
+                    + " url text,\n"
+                    + " created_at text,\n"
+                    + " company text,\n"
+                    + " company_url text,\n"
+                    + " location text,\n"
+                    + " title text,\n"
+                    + " description text,\n"
+                    + " how_to_apply text,\n"
+                    + " company_logo text,\n"
+                    + " category text,\n"
+                    + " coordinates text\n"
+                    + " );";
 
     // let this dbManager instance know what file to access
     sqlDBManager.dbConnection(dbLocation);
@@ -55,35 +74,31 @@ public class WebJsonGrabber {
     builder.setPrettyPrinting();
     Gson gson = builder.create();
 
-    // Fill job lists with every post formatted to the object for github and stackOverflow
-    jobLists = downloader.gitJsonToList(gson, url);
-    stackJobLists = downloader.stackXMLToList(rssURL);
-    // add git to DB
-    try {
-      sqlDBManager.gitJsonAddToDB(jobLists);
-    } catch (SQLException e) {
-      e.printStackTrace();
+    if (runWebScrapper)
+    {
+      // Fill job lists with every post formatted to the object for github and stackOverflow
+      jobLists = downloader.gitJsonToList(gson, url);
+      stackJobLists = downloader.stackXMLToList(rssURL);
+      // add git to DB
+      try {
+        sqlDBManager.gitJsonAddToDB(jobLists);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+      // Add Stack to DB
+      try {
+        sqlDBManager.stackXMLAddToDB(stackJobLists);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
 
-    // Add Stack to DB
-    try {
-      sqlDBManager.stackXMLAddToDB(stackJobLists);
-    } catch (SQLException e) {
-      e.printStackTrace();
+    if (runGeoCoder)
+    {
+      sqlDBManager.getUniqueLocations();
+      System.out.println("WIP geocoder");
     }
-
-    // Post run test functions commented out
-    // sqlDBManager.printFullDBKeys();
-    /*
-    for (StackOverFlowJobPost test : stackJobLists) {
-      System.out.println(test.getCategory());
-    }
-    */
-    /*
-    // Stores job info into 1 json file
-    fileWriter(gson, jobLists);
-    */
-
   }
   // unused from old code
   public static void fileWriter(Gson gson, List<JobPost> jobLists) {
