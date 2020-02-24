@@ -25,7 +25,8 @@ public class URLDownloader {
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
       do {
         // implementing retry function for http connection
-        System.out.println("Github Connection Busy, retrying in 3 seconds, Attempts left: " + retry);
+        System.out.println(
+            "Github Connection Busy, retrying in 3 seconds, Attempts left: " + retry);
         TimeUnit.SECONDS.sleep(3);
         urlConnection = (HttpURLConnection) url.openConnection();
         retry--;
@@ -35,7 +36,8 @@ public class URLDownloader {
         System.exit(0);
       }
 
-      InputStreamReader connStream = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
+      InputStreamReader connStream =
+          new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
       BufferedReader in = new BufferedReader(connStream);
       String inputLine;
       StringBuilder jsonData = new StringBuilder();
@@ -80,7 +82,8 @@ public class URLDownloader {
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
       do {
         // implementing retry function for http connection
-        System.out.println("StackOverflow Connection Busy, retrying in 5 seconds, attempts left: " + retry);
+        System.out.println(
+            "StackOverflow Connection Busy, retrying in 5 seconds, attempts left: " + retry);
         TimeUnit.SECONDS.sleep(5);
         urlConnection = (HttpURLConnection) url.openConnection();
         retry--;

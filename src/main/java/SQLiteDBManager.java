@@ -74,7 +74,7 @@ public class SQLiteDBManager {
   public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList) throws SQLException {
     // prepared statement
     String sql =
-            "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo,category,coordinates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo,category,coordinates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     try {
       PreparedStatement preparedStatement = conn.prepareStatement(sql);
       {
@@ -157,11 +157,9 @@ public class SQLiteDBManager {
     return false;
   }
   // Creating a hashmap for all the locations to cut down on queries to a geoCoder
-  public void getUniqueLocations()
-  {
+  public void getUniqueLocations() {
     Map<String, String> uniqueLocations = new HashMap<String, String>();
-    String sqlStatement =
-            "SELECT location, coordinates FROM jobListings";
+    String sqlStatement = "SELECT location, coordinates FROM jobListings";
     if (conn != null) {
 
       try {
@@ -169,9 +167,12 @@ public class SQLiteDBManager {
         ResultSet results = searchStatement.executeQuery(sqlStatement);
         while (results.next()) {
           results.getString("location");
-          if ( results.getString("coordinates") == null && uniqueLocations.get(results.getString("location")) == null && (results.getString("location") != null) && !(results.getString("location").contains("remote")))
-          {
-            uniqueLocations.put(results.getString("location"),geoCoder( results.getString("location")));
+          if (results.getString("coordinates") == null
+              && uniqueLocations.get(results.getString("location")) == null
+              && (results.getString("location") != null)
+              && !(results.getString("location").contains("remote"))) {
+            uniqueLocations.put(
+                results.getString("location"), geoCoder(results.getString("location")));
           }
         }
       } catch (SQLException e) {
@@ -181,27 +182,22 @@ public class SQLiteDBManager {
       System.out.println("Connection was closed unexpectedly, exiting");
       System.exit(0);
     }
-    //quick test
+    // quick test
     int countOfTotalLocations = 0;
 
     for (Map.Entry<String, String> entry : uniqueLocations.entrySet()) {
       String key = entry.getKey();
       Object val = entry.getValue();
-      System.out.println("Test our hashmap :" + key + "  "+ val);
+      System.out.println("Test our hashmap :" + key + "  " + val);
       countOfTotalLocations++;
     }
     System.out.println(countOfTotalLocations);
   }
-  //our intermediary between the hashmap and GeoCoder
-  public String geoCoder(String location)
-  {
+  // our intermediary between the hashmap and GeoCoder
+  public String geoCoder(String location) {
     UniqueGeoCoder encoding = new UniqueGeoCoder();
     return encoding.Forward(location);
   }
 
-  public void updateCoordinates()
-  {
-
-  }
-
+  public void updateCoordinates() {}
 }

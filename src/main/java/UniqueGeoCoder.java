@@ -1,7 +1,6 @@
 public class UniqueGeoCoder {
 
-    public String Forward(String address)
-    {
-        return "temp";
-    }
+  public String Forward(String address) {
+    return "temp";
+  }
 }
