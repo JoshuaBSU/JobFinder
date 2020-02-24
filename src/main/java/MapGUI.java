@@ -1,18 +1,39 @@
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
+import org.geotools.data.FileDataStore;
+import org.geotools.data.FileDataStoreFinder;
+import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.map.FeatureLayer;
+import org.geotools.map.Layer;
+import org.geotools.map.MapContent;
+import org.geotools.styling.SLD;
+import org.geotools.styling.Style;
+import org.geotools.swing.JMapFrame;
+import org.geotools.swing.data.JFileDataStoreChooser;
 
 public class MapGUI {
-    public void WindowMaker()
-    {
-        //test();
-        JFrame f=new JFrame();
-        JButton b=new JButton("click");//creating instance of JButton
-        b.setBounds(130,100,100, 40);//x axis, y axis, width, height
-        f.add(b);//adding button in JFrame
+    public void WindowMaker() throws IOException {
+        // display a data store file chooser dialog for shapefiles
+        File file = JFileDataStoreChooser.showOpenFile("shp", null);
+        if (file == null) {
+            return;
+        }
 
-        f.setSize(400,500);//400 width and 500 height
-        f.setLayout(null);//using no layout managers
-        f.setVisible(true);//making the frame visible
+        FileDataStore store = FileDataStoreFinder.getDataStore(file);
+        SimpleFeatureSource featureSource = store.getFeatureSource();
+
+        // Create a map content and add our shapefile to it
+        MapContent map = new MapContent();
+        map.setTitle("Quickstart");
+
+        Style style = SLD.createSimpleStyle(featureSource.getSchema());
+        Layer layer = new FeatureLayer(featureSource, style);
+        map.addLayer(layer);
+
+        // Now display the map
+        JMapFrame.showMap(map);
 
     }
 }

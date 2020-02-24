@@ -17,14 +17,14 @@ public class WebJsonGrabber {
     //bool vars to help smooth out compile times when certain modules don't need to run
     boolean runDownloaders = false;
     boolean runGeoCoder = true;
+    boolean runGui = true;
     //moved database and list calls into new function to visually split gui and geocoder
-    PrimaryCode(runDownloaders,runGeoCoder);
+    PrimaryCode(runDownloaders,runGeoCoder,runGui);
     //MapGUI test = new MapGUI();
     //test.WindowMaker();
   }
 
-  public static void PrimaryCode(boolean runWebScrapper, boolean runGeoCoder)
-  {
+  public static void PrimaryCode(boolean runWebScrapper, boolean runGeoCoder, boolean runGui){
     Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
@@ -98,6 +98,15 @@ public class WebJsonGrabber {
     {
       sqlDBManager.getUniqueLocations();
       System.out.println("WIP geocoder");
+    }
+    if (runGui)
+    {
+      try {
+        test.WindowMaker();
+      }catch (IOException e)
+      {
+        e.printStackTrace();
+      }
     }
   }
   // unused from old code

@@ -14,6 +14,8 @@ sourceCompatibility = 11
 
 
 repositories {
+    maven { url "https://download.osgeo.org/webdav/geotools/"}
+    maven { url "https://repo.boundlessgeo.com/main/"}
     mavenCentral()
     jcenter()
 }
@@ -30,8 +32,19 @@ dependencies {
     implementation 'org.jetbrains:annotations:15.0'
     compile group: 'org.json', name: 'json', version: '20190722'
     compile group: 'com.google.maps', name: 'google-maps-services', version: '0.11.0'
-    implementation 'org.slf4j:slf4j-simple:1.7.25'
 
+    // https://mvnrepository.com/artifact/org.geotools/gt-main
+    compile group: 'org.geotools', name: 'gt-main', version: '22.3'
+    // https://mvnrepository.com/artifact/org.geotools/gt-shapefile
+    compile group: 'org.geotools', name: 'gt-shapefile', version: '22.3'
+    // https://mvnrepository.com/artifact/org.geotools/gt-swing
+    compile group: 'org.geotools', name: 'gt-swing', version: '22.3'
+    // https://mvnrepository.com/artifact/org.geotools/gt-render
+    compile group: 'org.geotools', name: 'gt-render', version: '22.3'
+    // https://mvnrepository.com/artifact/org.geotools/gt-coverage
+    compile group: 'org.geotools', name: 'gt-coverage', version: '22.3'
+    // https://mvnrepository.com/artifact/it.geosolutions.jaiext.utilities/jt-utilities
+    compile group: 'it.geosolutions.jaiext.utilities', name: 'jt-utilities', version: '1.1.12'
 
 
 }
