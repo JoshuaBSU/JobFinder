@@ -1,32 +1,29 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WebJsonGrabber {
-  public static void main(String[] args)
-  {
+  public static void main(String[] args) {
     // Initiates Variables
     // looks good - comment to test workflow
 
-    //bool vars to help smooth out compile times when certain modules don't need to run
+    // bool vars to help smooth out compile times when certain modules don't need to run
     boolean uniquePopulateTable = false;
     boolean runDownloaders = false;
     boolean runGeoCoder = true;
     boolean runGui = false;
-    //split up functions to reduce reruns of network dependent functions
-    PrimaryCode(runDownloaders,runGeoCoder,uniquePopulateTable,runGui);
-    //MapGUI test = new MapGUI();
-    //test.WindowMaker();
+    // split up functions to reduce reruns of network dependent functions
+    PrimaryCode(runDownloaders, runGeoCoder, uniquePopulateTable, runGui);
+    // MapGUI test = new MapGUI();
+    // test.WindowMaker();
   }
 
-  public static void PrimaryCode(boolean runWebScrapper, boolean runGeoCoder,boolean uniquePopulateTable, boolean runGui){
+  public static void PrimaryCode(
+      boolean runWebScrapper, boolean runGeoCoder, boolean uniquePopulateTable, boolean runGui) {
     Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
@@ -35,7 +32,7 @@ public class WebJsonGrabber {
     MapGUI test = new MapGUI();
     UniqueGeoCoder geocode = new UniqueGeoCoder();
 
-    //test.WindowMaker();
+    // test.WindowMaker();
 
     String rssURL = "https://stackoverflow.com/jobs/feed";
     String url = "https://jobs.github.com/positions.json?page=";
@@ -50,27 +47,27 @@ public class WebJsonGrabber {
     // basic table structure
     // added ignore to throw away duplicate primary ID
     String sqlCreate =
-            "CREATE TABLE IF NOT EXISTS jobListings (\n"
-                    + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
-                    + " type text,\n"
-                    + " url text,\n"
-                    + " created_at text,\n"
-                    + " company text,\n"
-                    + " company_url text,\n"
-                    + " location text,\n"
-                    + " title text,\n"
-                    + " description text,\n"
-                    + " how_to_apply text,\n"
-                    + " company_logo text,\n"
-                    + " category text,\n"
-                    + " coordinates text\n"
-                    + " );";
+        "CREATE TABLE IF NOT EXISTS jobListings (\n"
+            + " id text PRIMARY KEY ON CONFLICT IGNORE,\n"
+            + " type text,\n"
+            + " url text,\n"
+            + " created_at text,\n"
+            + " company text,\n"
+            + " company_url text,\n"
+            + " location text,\n"
+            + " title text,\n"
+            + " description text,\n"
+            + " how_to_apply text,\n"
+            + " company_logo text,\n"
+            + " category text,\n"
+            + " coordinates text\n"
+            + " );";
     String sqlCreateUniques =
-            "CREATE TABLE IF NOT EXISTS uniqueLocations (\n"
-                    + " location text PRIMARY KEY ON CONFLICT IGNORE,\n"
-                    + " longitude text,\n"
-                    + " latitude text\n"
-                    + " );";
+        "CREATE TABLE IF NOT EXISTS uniqueLocations (\n"
+            + " location text PRIMARY KEY ON CONFLICT IGNORE,\n"
+            + " longitude text,\n"
+            + " latitude text\n"
+            + " );";
     // let this dbManager instance know what file to access
     sqlDBManager.dbConnection(dbLocation);
     sqlDBManager.dbManager(sqlCreateUniques);
@@ -81,8 +78,7 @@ public class WebJsonGrabber {
     builder.setPrettyPrinting();
     Gson gson = builder.create();
 
-    if (runWebScrapper)
-    {
+    if (runWebScrapper) {
       // Fill job lists with every post formatted to the object for github and stackOverflow
       jobLists = downloader.gitJsonToList(gson, url);
       stackJobLists = downloader.stackXMLToList(rssURL);
@@ -100,29 +96,25 @@ public class WebJsonGrabber {
       }
     }
 
-    //not resource effecient, but without pointers its one of the quicker ways
-    if (uniquePopulateTable)
-    {
-      //first run functions to populate the table prior to geocoding
+    // not resource effecient, but without pointers its one of the quicker ways
+    if (uniquePopulateTable) {
+      // first run functions to populate the table prior to geocoding
       sqlDBManager.uniqueTransferToSecondDB(sqlDBManager.getUniqueLocationsFromPrimaryList());
     }
-    //test
-    //sqlDBManager.testUpdateStatement();
+    // test
+    // sqlDBManager.testUpdateStatement();
 
-    if (runGeoCoder)
-    {
-      //update unique location db, handle remotes and things like that
+    if (runGeoCoder) {
+      // update unique location db, handle remotes and things like that
       sqlDBManager.geoCodeSecondDB();
     }
 
-    //System.out.println(geocode.forward("Boston"));
+    // System.out.println(geocode.forward("Boston"));
 
-    if (runGui)
-    {
+    if (runGui) {
       try {
         test.WindowMaker();
-      }catch (IOException e)
-      {
+      } catch (IOException e) {
         e.printStackTrace();
       }
     }
