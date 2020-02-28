@@ -188,7 +188,7 @@ public class SQLiteDBManager {
                 formattedString = formattedString.substring(0,formattedString.indexOf("("));
                 uniqueLocations.put(formattedString,null);
               }
-              //Because // "Mountain View" // and potentially other no location data in location...WHY!?
+              //Because // "Mountain View" // and potentially other non location data in location fields... WHY!?
               else if(results.getString("location").contains("/") || results.getString("location").contains("\\")){
                 String formattedString = results.getString("location");
                 if(results.getString("location").contains("/"))
@@ -333,4 +333,32 @@ public class SQLiteDBManager {
     }
     return uniquesFullInfo;
   }
+
+  public void tableJoinPrimaryWithUniques()
+  {
+    //table matching, anything not handled is a remote
+    String sqlStatementGrabUniques = "SELECT location, longitude, latitude FROM uniqueLocations";
+    String sqlStatementUpdatePrimary = "UPDATE jobListings SET coordinates = ? "
+            + "WHERE location = ?";
+    int count = 0;
+    if (conn != null) {
+      try{
+        Statement searchStatement = conn.createStatement();
+        ResultSet results = searchStatement.executeQuery(sqlStatementGrabUniques);
+        PreparedStatement preparedStatement = conn.prepareStatement(sqlStatementUpdatePrimary);
+        while (results.next())
+        {
+          count++;
+          preparedStatement.setString(2, results.getString("Location"));
+          preparedStatement.setString(1, results.getString("longitude") + " "+ results.getString("latitude"));
+          preparedStatement.executeUpdate();
+          System.out.println("Update Number: " + count);
+        }
+
+      }catch(SQLException e){
+        e.printStackTrace();
+      }
+    }
+  }
+
 }

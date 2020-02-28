@@ -18,8 +18,8 @@ public class WebJsonGrabber {
     //bool vars to help smooth out compile times when certain modules don't need to run
     boolean uniquePopulateTable = false;
     boolean runDownloaders = false;
-    boolean runGeoCoder = true;
-    boolean runGui = false;
+    boolean runGeoCoder = false;
+    boolean runGui = true;
     //split up functions to reduce reruns of network dependent functions
     PrimaryCode(runDownloaders,runGeoCoder,uniquePopulateTable,runGui);
     //MapGUI test = new MapGUI();
@@ -113,6 +113,8 @@ public class WebJsonGrabber {
     {
       //update unique location db, handle remotes and things like that
       sqlDBManager.geoCodeSecondDB();
+      //updates the actual database
+      sqlDBManager.tableJoinPrimaryWithUniques();
     }
 
     //System.out.println(geocode.forward("Boston"));
