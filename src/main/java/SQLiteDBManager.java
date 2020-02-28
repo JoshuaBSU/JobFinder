@@ -74,7 +74,7 @@ public class SQLiteDBManager {
   public void stackXMLAddToDB(List<StackOverFlowJobPost> stackJobList) throws SQLException {
     // prepared statement
     String sql =
-        "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo,category,coordinates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "Insert Into jobListings(id,type,url,created_at,company,company_url,location,title,description,how_to_apply,company_logo,category,coordinates) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
     try {
       PreparedStatement preparedStatement = conn.prepareStatement(sql);
       {
@@ -156,10 +156,13 @@ public class SQLiteDBManager {
     }
     return false;
   }
+
   // Creating a hashmap for all the locations to cut down on queries to a geoCoder
-  public void getUniqueLocations() {
+  public Map<String, String> getUniqueLocationsFromPrimaryList()
+  {
     Map<String, String> uniqueLocations = new HashMap<String, String>();
-    String sqlStatement = "SELECT location, coordinates FROM jobListings";
+    String sqlStatement =
+            "SELECT location, coordinates FROM jobListings";
     if (conn != null) {
 
       try {
@@ -167,12 +170,41 @@ public class SQLiteDBManager {
         ResultSet results = searchStatement.executeQuery(sqlStatement);
         while (results.next()) {
           results.getString("location");
-          if (results.getString("coordinates") == null
-              && uniqueLocations.get(results.getString("location")) == null
-              && (results.getString("location") != null)
-              && !(results.getString("location").contains("remote"))) {
-            uniqueLocations.put(
-                results.getString("location"), geoCoder(results.getString("location")));
+          // If remote exists it will be the default, therefore it makes sense to not carry that over in the geocoder table
+          if ( results.getString("coordinates") == null && uniqueLocations.get(results.getString("location")) == null && (results.getString("location") != null))
+          {
+            if(!(results.getString("location").contains("remote") || (results.getString("location").contains("Remote"))))
+            {
+              //removes second location and will be handled in matching
+              if (results.getString("location").contains("or "))
+              {
+                String formattedString = results.getString("location");
+                formattedString = formattedString.substring(0,formattedString.indexOf("or "));
+                uniqueLocations.put(formattedString,null);
+              }
+              else if (results.getString("location").contains("("))
+              {
+                String formattedString = results.getString("location");
+                formattedString = formattedString.substring(0,formattedString.indexOf("("));
+                uniqueLocations.put(formattedString,null);
+              }
+              //Because // "Mountain View" // and potentially other no location data in location...WHY!?
+              else if(results.getString("location").contains("/") || results.getString("location").contains("\\")){
+                String formattedString = results.getString("location");
+                if(results.getString("location").contains("/"))
+                {
+                  formattedString = formattedString.substring(0,formattedString.indexOf("/"));
+                  uniqueLocations.put(results.getString("location"), null);
+                }
+                else
+                {
+                  formattedString = formattedString.substring(0,formattedString.indexOf("\\"));
+                  uniqueLocations.put(results.getString("location"), null);
+                }
+              }else {
+              uniqueLocations.put(results.getString("location"), null);
+              }
+            }
           }
         }
       } catch (SQLException e) {
@@ -182,22 +214,123 @@ public class SQLiteDBManager {
       System.out.println("Connection was closed unexpectedly, exiting");
       System.exit(0);
     }
-    // quick test
-    int countOfTotalLocations = 0;
+    return uniqueLocations;
+  }
 
-    for (Map.Entry<String, String> entry : uniqueLocations.entrySet()) {
-      String key = entry.getKey();
-      Object val = entry.getValue();
-      System.out.println("Test our hashmap :" + key + "  " + val);
-      countOfTotalLocations++;
+  public void uniqueTransferToSecondDB(Map<String, String> locations)
+  {
+    String sqlStatement =
+            "Insert Into uniqueLocations(location, longitude, latitude) VALUES(?,?,?)";
+    try {
+      PreparedStatement preparedStatement = conn.prepareStatement(sqlStatement);
+      {
+        for (Map.Entry<String, String> entry : locations.entrySet()) {
+          preparedStatement.setString(1, entry.getKey());
+          preparedStatement.setString(2, null);
+          preparedStatement.setString(3, null);
+          preparedStatement.executeUpdate();
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
-    System.out.println(countOfTotalLocations);
-  }
-  // our intermediary between the hashmap and GeoCoder
-  public String geoCoder(String location) {
-    UniqueGeoCoder encoding = new UniqueGeoCoder();
-    return encoding.Forward(location);
+
+    //code to insert into uniquelocations table
+
   }
 
-  public void updateCoordinates() {}
+  public void testUpdateStatement()
+  {
+    String sqlStatement = "SELECT location, longitude, latitude FROM uniqueLocations";
+    String sqlStatementUpdate = "UPDATE uniqueLocations SET longitude = ? , "
+            + "latitude = ? "
+            + "WHERE location = ?";
+    if (conn != null) {
+      int total = 0;
+      try {
+        Statement searchStatement = conn.createStatement();
+        ResultSet results = searchStatement.executeQuery(sqlStatement);
+        while (results.next() && total < 2) {
+          if (results.getString("Location") != null && results.getString("longitude") == null)
+          {
+              PreparedStatement preparedStatement = conn.prepareStatement(sqlStatementUpdate);
+              preparedStatement.setString(3, results.getString("Location"));
+              preparedStatement.setString(1, "hi");
+              preparedStatement.setString(2, "bye");
+              preparedStatement.executeUpdate();
+              total++;
+              System.out.println("Update Number:" + total);
+          }
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void geoCodeSecondDB()
+  {
+    String sqlStatement = "SELECT location, longitude, latitude FROM uniqueLocations";
+    String sqlStatementUpdate = "UPDATE uniqueLocations SET longitude = ? , "
+            + "latitude = ? "
+            + "WHERE location = ?";
+    if (conn != null) {
+      int total = 0;
+      try {
+        Statement searchStatement = conn.createStatement();
+        ResultSet results = searchStatement.executeQuery(sqlStatement);
+        while (results.next()) {
+          if (results.getString("Location") != null && results.getString("longitude") == null && results.getString("latitude") == null ){
+            List<String> temporaryCordinates = new ArrayList<>();
+            UniqueGeoCoder geocode = new UniqueGeoCoder();
+            temporaryCordinates = geocode.forward(results.getString("Location"));
+
+            if (temporaryCordinates != null){
+
+              PreparedStatement preparedStatement = conn.prepareStatement(sqlStatementUpdate);
+              if (temporaryCordinates.get(0) != null) {
+                preparedStatement.setString(3, results.getString("Location"));
+                preparedStatement.setString(1, temporaryCordinates.get(0).toString());
+                preparedStatement.setString(2, temporaryCordinates.get(1).toString());
+                preparedStatement.executeUpdate();
+                System.out.println(temporaryCordinates.get(0) + temporaryCordinates.get(1));
+              }
+            }
+            total++;
+            System.out.println("Update Number:" + total);
+          }
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public Map<String, List<String>> getUniquedbInfo()
+  {
+    Map<String, List<String>> uniquesFullInfo = new HashMap<>();
+
+    String sqlStatement =
+          "SELECT location, longitude, latitude FROM uniqueLocations";
+    if (conn != null) {
+      try {
+        Statement searchStatement = conn.createStatement();
+        ResultSet results = searchStatement.executeQuery(sqlStatement);
+        UniqueGeoCoder geocode = new UniqueGeoCoder();
+        while (results.next() ) {
+            List<String> cordinates = new ArrayList<String>();
+            //run geocoder on
+            cordinates.add(results.getString("longitude"));
+            cordinates.add(results.getString("latitude"));
+            uniquesFullInfo.put(results.getString("location"), cordinates);
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      System.out.println("Connection was closed unexpectedly, exiting");
+      System.exit(0);
+    }
+    return uniquesFullInfo;
+  }
 }

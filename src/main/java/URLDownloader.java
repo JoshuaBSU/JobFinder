@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class URLDownloader {
@@ -92,7 +93,10 @@ public class URLDownloader {
         System.out.println("Too many connection attempts failed closing application");
         System.exit(0);
       }
-      Document document = builder.parse(url.openStream());
+      InputStreamReader inputStreams = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
+      InputSource inputSource = new InputSource(inputStreams);
+      inputSource.setEncoding("UTF-8");
+      Document document = builder.parse(inputSource);
       // Fixes some issues allegedly
       document.getDocumentElement().normalize();
       NodeList nList = document.getElementsByTagName("item");
