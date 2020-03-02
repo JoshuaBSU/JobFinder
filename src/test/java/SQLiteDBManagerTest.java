@@ -131,7 +131,7 @@ class SQLiteDBManagerTest {
     //Random JobList ID is chosen and checked if it was added to the DB
     String testID = "";
     Random rand = new Random();
-    int randomJobID = 1 + rand.nextInt(150);
+    int randomJobID = 1 + rand.nextInt(20);
     int i = 1;
     for(JobPost randJobSelection : jobLists)
     {
