@@ -124,7 +124,14 @@ public class WebJsonGrabber {
 
     Sorting sorter = new Sorting();
     String tempCategory = "ruby";
-    //jobsBeingSorted = sorter.categorySort(jobsBeingSorted,tempCategory );
+    // 200km from boston
+    Double DistanceTest = 200.0;
+    Double longitudeTest = -71.057083;
+    Double latitudeTest = 42.361145;
+    
+    //look for ruby jobs within 200km of boston
+    jobsBeingSorted = sorter.categorySort(jobsBeingSorted,tempCategory );
+    jobsBeingSorted = sorter.coordinateSearch(jobsBeingSorted,longitudeTest,latitudeTest,DistanceTest);
 
     /*
     for(DatabaseEntry jobprintout : jobsBeingSorted)

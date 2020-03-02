@@ -128,18 +128,11 @@ class SQLiteDBManagerTest {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    //Random JobList ID is chosen and checked if it was added to the DB
-    String testID = "";
     Random rand = new Random();
-    int randomJobID = 1 + rand.nextInt(20);
-    int i = 1;
-    for(JobPost randJobSelection : jobLists)
-    {
-      if (i == randomJobID)
-      {
-        testID = randJobSelection.getId();
-      }
-    }
+    int randomJobID = 1 + rand.nextInt(100);
+    //checks 60th item
+    String testID = jobLists.get(randomJobID).getId();
+
     System.out.println(testID);
     assertTrue(sqlDBManager.checkIfJobListByID(testID));
   }
