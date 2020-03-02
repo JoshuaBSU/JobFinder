@@ -93,7 +93,8 @@ public class URLDownloader {
         System.out.println("Too many connection attempts failed closing application");
         System.exit(0);
       }
-      InputStreamReader inputStreams = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
+      InputStreamReader inputStreams =
+          new InputStreamReader(url.openStream(), StandardCharsets.UTF_8);
       InputSource inputSource = new InputSource(inputStreams);
       inputSource.setEncoding("UTF-8");
       Document document = builder.parse(inputSource);
