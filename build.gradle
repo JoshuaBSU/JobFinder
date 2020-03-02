@@ -22,10 +22,13 @@ sourceCompatibility = 11
 repositories {
     maven { url "https://download.osgeo.org/webdav/geotools/"}
     maven { url "https://repo.boundlessgeo.com/main/"}
+    maven { url = 'https://maven.teamdev.com/repository/products' }
     mavenCentral()
     jcenter()
 }
-
+ext {
+    jxBrowserVersion = '7.5'
+}
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.0')
@@ -35,6 +38,9 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20190722'
     compile group: 'com.google.maps', name: 'google-maps-services', version: '0.11.0'
     compile group: 'com.byteowls', name: 'jopencage', version: '1.2.1'
+    compile "com.teamdev.jxbrowser:jxbrowser-cross-platform:${jxBrowserVersion}"
+    compile "com.teamdev.jxbrowser:jxbrowser-swing:${jxBrowserVersion}"
+    compile "com.teamdev.jxbrowser:jxbrowser-javafx:${jxBrowserVersion}"
 
     // https://mvnrepository.com/artifact/org.geotools/gt-main
     compile group: 'org.geotools', name: 'gt-main', version: '22.3'
@@ -46,14 +52,16 @@ dependencies {
     compile group: 'org.geotools', name: 'gt-render', version: '22.3'
     // https://mvnrepository.com/artifact/org.geotools/gt-coverage
     compile group: 'org.geotools', name: 'gt-coverage', version: '22.3'
+    // https://mvnrepository.com/artifact/org.geotools/gt-epsg-hsql
+    testCompile group: 'org.geotools', name: 'gt-epsg-hsql', version: '22.3'
     // https://mvnrepository.com/artifact/it.geosolutions.jaiext.utilities/jt-utilities
     compile group: 'it.geosolutions.jaiext.utilities', name: 'jt-utilities', version: '1.1.12'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     compile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.30'
-    //Only for when we do test in geocoder
-    //testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+
+
 
 
 }

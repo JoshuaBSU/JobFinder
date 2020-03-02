@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class WebJsonGrabber {
-  public static void main(String[] args)
-  {
+  public static void main(String[] args) throws IOException {
     // Initiates Variables
     // looks good - comment to test workflow
 
@@ -26,7 +26,7 @@ public class WebJsonGrabber {
     //test.WindowMaker();
   }
 
-  public static void PrimaryCode(boolean runWebScrapper, boolean runGeoCoder,boolean uniquePopulateTable, boolean runGui){
+  public static void PrimaryCode(boolean runWebScrapper, boolean runGeoCoder,boolean uniquePopulateTable, boolean runGui) throws IOException {
     Connection conn;
     List<JobPost> jobLists = new ArrayList<JobPost>();
     List<StackOverFlowJobPost> stackJobLists = new ArrayList<StackOverFlowJobPost>();
@@ -117,16 +117,26 @@ public class WebJsonGrabber {
       sqlDBManager.tableJoinPrimaryWithUniques();
     }
 
-    //System.out.println(geocode.forward("Boston"));
+    //!!-- Testing Area --!!
 
+    //Sorting algorithm takes in a List and sends back a list so we can use the function on itself
+    List<DatabaseEntry> jobsBeingSorted =  sqlDBManager.returnEntireDB();
+
+    Sorting sorter = new Sorting();
+    String tempCategory = "ruby";
+    jobsBeingSorted = sorter.categorySort(jobsBeingSorted,tempCategory );
+
+    for(DatabaseEntry jobprintout : jobsBeingSorted)
+    {
+      System.out.println(jobprintout.toString());
+    }
+
+    //!!-- Testing Area --!!
+
+    //System.out.println(geocode.forward("Boston"));
     if (runGui)
     {
-      try {
-        test.WindowMaker();
-      }catch (IOException e)
-      {
-        e.printStackTrace();
-      }
+      test.WindowMaker();
     }
 
     sqlDBManager.dbConnectionClose();

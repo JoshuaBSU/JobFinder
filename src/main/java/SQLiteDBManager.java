@@ -134,6 +134,53 @@ public class SQLiteDBManager {
     }
   }
 
+  public List<DatabaseEntry> returnEntireDB()
+  {
+    List<DatabaseEntry> returnList = new ArrayList<DatabaseEntry>();
+    String sqlStatement = "SELECT id, type, url, created_at, company, company_url, location, title, description, how_to_apply, company_logo, category, coordinates FROM jobListings";
+    if (conn != null) {
+
+      try {
+        Statement searchStatement = conn.createStatement();
+        ResultSet results = searchStatement.executeQuery(sqlStatement);
+        while (results.next()) {
+          DatabaseEntry singleItemReturn = new DatabaseEntry();
+          singleItemReturn.setId( results.getString("id") );
+          singleItemReturn.setType( results.getString("type") );
+          singleItemReturn.setUrl( results.getString("url") );
+          singleItemReturn.setCreated_at( results.getString("created_at") );
+          singleItemReturn.setCompany( results.getString("company") );
+          singleItemReturn.setCompany_url( results.getString("company_url") );
+          singleItemReturn.setLocation( results.getString("location") );
+          singleItemReturn.setTitle( results.getString("title") );
+          singleItemReturn.setDescription( results.getString("description") );
+          singleItemReturn.setHow_to_apply( results.getString("how_to_apply") );
+          singleItemReturn.setCompany_logo( results.getString("company_logo") );
+          singleItemReturn.setCategory( results.getString("category") );
+          if(results.getString("coordinates") != null)
+          {
+            String tempCords = results.getString("coordinates");
+            String[] spliced = tempCords.split(" ");
+            String tempLongitude = spliced[0];
+            String tempLatitude = spliced[1];
+            singleItemReturn.setLongitude(tempLongitude);
+            singleItemReturn.setLatitude(tempLatitude);
+          }
+          returnList.add(singleItemReturn);
+        }
+        return returnList;
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+
+    } else {
+      System.out.println("Connection was closed unexpectedly, exiting");
+      System.exit(0);
+    }
+
+    return returnList;
+  }
+
   public boolean checkIfJobListByID(String id) {
     String sqlStatement =
         "SELECT id, type, url, created_at, company, company_url, location,title, description, how_to_apply, company_logo, category, coordinates FROM jobListings";
