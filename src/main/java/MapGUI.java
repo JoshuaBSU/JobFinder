@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.*;
 
 import org.geotools.data.DefaultFeatureReader;
@@ -27,7 +28,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 
 
 public class MapGUI {
-  public void WindowMaker() throws IOException {
+  public void WindowMaker(List<DatabaseEntry> jobsToDisplay) throws IOException {
     // display a data store file chooser dialog for shapefiles
     File file = JFileDataStoreChooser.showOpenFile("shp", null);
     if (file == null) {
@@ -55,12 +56,13 @@ public class MapGUI {
     //toolbar.add(new JButton(new ExportShapefileAction()));
     GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
 
-    int i = 0;
-    while (i <100) {
-      Layer pointLayer = addPoint(i, i);
-      map.addLayer(pointLayer);
-      i++;
-    }
+      for(DatabaseEntry jobPinning : jobsToDisplay)
+      {
+        if(jobPinning.getLatitude() != null && jobPinning.getLongitude() != null) {
+          Layer pointLayer = addPoint(Double.parseDouble(jobPinning.getLongitude()), Double.parseDouble(jobPinning.getLatitude()));
+          map.addLayer(pointLayer);
+        }
+      }
     //map.addLayer(pointLayer);
 
 

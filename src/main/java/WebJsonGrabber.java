@@ -124,19 +124,21 @@ public class WebJsonGrabber {
 
     Sorting sorter = new Sorting();
     String tempCategory = "ruby";
-    jobsBeingSorted = sorter.categorySort(jobsBeingSorted,tempCategory );
+    //jobsBeingSorted = sorter.categorySort(jobsBeingSorted,tempCategory );
 
+    /*
     for(DatabaseEntry jobprintout : jobsBeingSorted)
     {
-      System.out.println(jobprintout.toString());
+      System.out.print(jobprintout.getId());
     }
+    */
 
     //!!-- Testing Area --!!
 
     //System.out.println(geocode.forward("Boston"));
     if (runGui)
     {
-      test.WindowMaker();
+      test.WindowMaker(jobsBeingSorted);
     }
 
     sqlDBManager.dbConnectionClose();

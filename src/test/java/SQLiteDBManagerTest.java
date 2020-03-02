@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import org.junit.jupiter.api.Test;
 
 class SQLiteDBManagerTest {
@@ -126,9 +128,19 @@ class SQLiteDBManagerTest {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    // Known ID on git
-    // https://jobs.github.com/positions/76de3634-906a-4572-a293-661c7178f24f
-    String testID = "76de3634-906a-4572-a293-661c7178f24f";
+    //Random JobList ID is chosen and checked if it was added to the DB
+    String testID = "";
+    Random rand = new Random();
+    int randomJobID = 1 + rand.nextInt(150);
+    int i = 1;
+    for(JobPost randJobSelection : jobLists)
+    {
+      if (i == randomJobID)
+      {
+        testID = randJobSelection.getId();
+      }
+    }
+    System.out.println(testID);
     assertTrue(sqlDBManager.checkIfJobListByID(testID));
   }
 
