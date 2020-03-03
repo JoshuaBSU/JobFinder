@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.junit.jupiter.api.Test;
 
 class SQLiteDBManagerTest {
@@ -130,7 +129,7 @@ class SQLiteDBManagerTest {
     }
     Random rand = new Random();
     int randomJobID = 1 + rand.nextInt(100);
-    //checks 60th item
+    // checks 60th item
     String testID = jobLists.get(randomJobID).getId();
 
     System.out.println(testID);
