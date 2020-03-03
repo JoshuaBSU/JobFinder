@@ -1,5 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class Sorting {
@@ -41,6 +43,80 @@ public class Sorting {
                 {
                     dbListSorted.add(jobfilter);
                 }
+            }
+        }
+        return dbListSorted;
+    }
+    //Checks on the company column field
+    public List<DatabaseEntry> companySearch(List<DatabaseEntry> dbListRaw,String company)
+    {
+        List<DatabaseEntry> dbListSorted = new ArrayList<>();
+
+        for(DatabaseEntry jobfilter : dbListRaw)
+        {
+            if(jobfilter.getCompany() != null) {
+                if (jobfilter.getCompany().toLowerCase().contains(company.toLowerCase())) {
+                    dbListSorted.add(jobfilter);
+                }
+            }
+        }
+        return dbListSorted;
+    }
+
+    //Both required some changes to the timezone format as it is not a recognized format when running bellow command
+    //System.out.println(Arrays.toString(TimeZone.getAvailableIDs()));
+    public List<DatabaseEntry> dateSearchOlderThan(List<DatabaseEntry> dbListRaw, String dateinput)
+    {
+        List<DatabaseEntry> dbListSorted = new ArrayList<>();
+        DateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+        if( dateinput != null) {
+         try{
+             Date dateToCheckAgainst = format.parse(dateinput.replaceAll("Z$","PST"));
+             for(DatabaseEntry jobfilter : dbListRaw)
+             {
+                 if(jobfilter.getCreated_at() != null) {
+                     Date date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$","PST"));
+
+                     if (date2.getTime() < dateToCheckAgainst.getTime())
+                     {
+                         dbListSorted.add(jobfilter);
+                     }
+                 }
+             }
+             return dbListSorted;
+         } catch (ParseException e)
+            {
+                e.printStackTrace();
+                System.out.println("Invalid date entry list unchanged");
+                return dbListRaw;
+            }
+        }
+        return dbListSorted;
+    }
+    public List<DatabaseEntry> dateSearchYoungerThan(List<DatabaseEntry> dbListRaw,String dateinput)
+    {
+        List<DatabaseEntry> dbListSorted = new ArrayList<>();
+        DateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+        if( dateinput != null) {
+            try{
+                Date dateToCheckAgainst = format.parse(dateinput.replaceAll("Z$","PST"));
+                for(DatabaseEntry jobfilter : dbListRaw)
+                {
+                    if(jobfilter.getCreated_at() != null) {
+                        Date date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$","PST"));
+
+                        if (date2.getTime() > dateToCheckAgainst.getTime())
+                        {
+                            dbListSorted.add(jobfilter);
+                        }
+                    }
+                }
+                return dbListSorted;
+            } catch (ParseException e)
+            {
+                e.printStackTrace();
+                System.out.println("Invalid date entry list unchanged");
+                return dbListRaw;
             }
         }
         return dbListSorted;

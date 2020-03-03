@@ -5,10 +5,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WebJsonGrabber {
   public static void main(String[] args) throws IOException {
@@ -123,15 +120,17 @@ public class WebJsonGrabber {
     List<DatabaseEntry> jobsBeingSorted =  sqlDBManager.returnEntireDB();
 
     Sorting sorter = new Sorting();
-    String tempCategory = "ruby";
+    String tempCategory = "sql";
+    String testDate = "Tue, 25 Feb 2020 08:02:24 Z";
     // 200km from boston
     Double DistanceTest = 200.0;
     Double longitudeTest = -71.057083;
     Double latitudeTest = 42.361145;
-    
+
     //look for ruby jobs within 200km of boston
     jobsBeingSorted = sorter.categorySort(jobsBeingSorted,tempCategory );
-    jobsBeingSorted = sorter.coordinateSearch(jobsBeingSorted,longitudeTest,latitudeTest,DistanceTest);
+    jobsBeingSorted = sorter.dateSearchYoungerThan(jobsBeingSorted,testDate);
+    //jobsBeingSorted = sorter.coordinateSearch(jobsBeingSorted,longitudeTest,latitudeTest,DistanceTest);
 
     /*
     for(DatabaseEntry jobprintout : jobsBeingSorted)
