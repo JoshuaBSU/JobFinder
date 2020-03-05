@@ -1,18 +1,8 @@
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import com.google.maps.StaticMapsApi;
-import com.google.maps.StaticMapsRequest;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.LatLng;
-import com.google.maps.model.Size;
-import org.geotools.data.DefaultFeatureReader;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.simple.SimpleFeatureSource;
@@ -34,7 +24,6 @@ import org.locationtech.jts.geom.Point;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
-
 public class MapGUI {
   public void WindowMaker(List<DatabaseEntry> jobsToDisplay) throws IOException {
     // display a data store file chooser dialog for shapefiles
@@ -46,7 +35,7 @@ public class MapGUI {
     FileDataStore store = FileDataStoreFinder.getDataStore(file);
     SimpleFeatureSource featureSource = store.getFeatureSource();
 
-    //Ask the user for search parameters and use as title
+    // Ask the user for search parameters and use as title
     MapContent map = new MapContent();
     map.setTitle("JobLocations");
 
@@ -60,24 +49,25 @@ public class MapGUI {
 
     JToolBar toolbar = mapFrame.getToolBar();
     toolbar.addSeparator();
-    //toolbar.add(new JButton(new ValidateGeometryAction()));
-    //toolbar.add(new JButton(new ExportShapefileAction()));
+    // toolbar.add(new JButton(new ValidateGeometryAction()));
+    // toolbar.add(new JButton(new ExportShapefileAction()));
     GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
 
-      for(DatabaseEntry jobPinning : jobsToDisplay)
-      {
-        if(jobPinning.getLatitude() != null && jobPinning.getLongitude() != null) {
-          Layer pointLayer = addPoint(Double.parseDouble(jobPinning.getLongitude()), Double.parseDouble(jobPinning.getLatitude()));
-          map.addLayer(pointLayer);
-        }
+    for (DatabaseEntry jobPinning : jobsToDisplay) {
+      if (jobPinning.getLatitude() != null && jobPinning.getLongitude() != null) {
+        Layer pointLayer =
+            addPoint(
+                Double.parseDouble(jobPinning.getLongitude()),
+                Double.parseDouble(jobPinning.getLatitude()));
+        map.addLayer(pointLayer);
       }
-    //map.addLayer(pointLayer);
-
+    }
+    // map.addLayer(pointLayer);
 
     mapFrame.setSize(800, 600);
     mapFrame.setVisible(true);
     // Now display the map
-    //JMapFrame.showMap(map);
+    // JMapFrame.showMap(map);
   }
 
   static Layer addPoint(double latitude, double longitude) {
@@ -98,10 +88,9 @@ public class MapGUI {
     featureCollection.add(feature);
     float opacity = 1;
     float size = 10;
-    Style style = SLD.createPointStyle("Circle",Color.red,Color.BLACK,opacity,size);
+    Style style = SLD.createPointStyle("Circle", Color.red, Color.BLACK, opacity, size);
 
     Layer layer = new FeatureLayer(featureCollection, style);
     return layer;
   }
-
 }
