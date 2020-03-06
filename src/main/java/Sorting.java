@@ -76,8 +76,7 @@ public class Sorting {
           if (jobfilter.getCreated_at() != null) {
             try {
               date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
-            }catch (ParseException e)
-            {
+            } catch (ParseException e) {
               DateFormat format2 = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
               date2 = format2.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
             }
@@ -96,7 +95,8 @@ public class Sorting {
     return dbListSorted;
   }
 
-  public List<DatabaseEntry> dateSearchYoungerThan(List<DatabaseEntry> dbListRaw, String dateinput) {
+  public List<DatabaseEntry> dateSearchYoungerThan(
+      List<DatabaseEntry> dbListRaw, String dateinput) {
     List<DatabaseEntry> dbListSorted = new ArrayList<>();
     Date date2 = new Date();
     DateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
@@ -107,8 +107,7 @@ public class Sorting {
           if (jobfilter.getCreated_at() != null) {
             try {
               date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
-            }catch (ParseException e)
-            {
+            } catch (ParseException e) {
               DateFormat format2 = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
               date2 = format2.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
             }

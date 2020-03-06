@@ -1,11 +1,8 @@
 import java.awt.*;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.*;
-
-import org.geotools.data.DefaultFeatureReader;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.simple.SimpleFeatureSource;
@@ -28,21 +25,21 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 public class MapGUI {
-  //first window that makes the map based on the data you filter
+  // first window that makes the map based on the data you filter
 
   public void MapMaker(List<DatabaseEntry> jobsToDisplay) throws IOException {
     // display a data store file chooser dialog for shapefiles
     File file = new File("ne_50m_admin_0_countries_lakes.shp");
     if (file == null) {
       file = JFileDataStoreChooser.showOpenFile("shp", null);
-      if(file == null) {
+      if (file == null) {
         return;
       }
     }
     FileDataStore store = FileDataStoreFinder.getDataStore(file);
     SimpleFeatureSource featureSource = store.getFeatureSource();
 
-    //Ask the user for search parameters and use as title
+    // Ask the user for search parameters and use as title
     MapContent map = new MapContent();
     map.setTitle("JobLocations");
 
@@ -55,32 +52,32 @@ public class MapGUI {
     mapFrame.enableStatusBar(true);
     mapFrame.enableLayerTable(true);
 
-
     JToolBar toolbar = mapFrame.getToolBar();
     toolbar.addSeparator();
 
-    //toolbar.add(new JButton(new ValidateGeometryAction()));
-    //toolbar.add(new JButton(new ExportShapefileAction()));
+    // toolbar.add(new JButton(new ValidateGeometryAction()));
+    // toolbar.add(new JButton(new ExportShapefileAction()));
     GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
-    if(jobsToDisplay != null ) {
+    if (jobsToDisplay != null) {
       for (DatabaseEntry jobPinning : jobsToDisplay) {
         if (jobPinning.getLatitude() != null && jobPinning.getLongitude() != null) {
-          Layer pointLayer = addPoint(Double.parseDouble(jobPinning.getLongitude()), Double.parseDouble(jobPinning.getLatitude()));
+          Layer pointLayer =
+              addPoint(
+                  Double.parseDouble(jobPinning.getLongitude()),
+                  Double.parseDouble(jobPinning.getLatitude()));
           pointLayer.setTitle(jobPinning.getTitle());
           map.addLayer(pointLayer);
         }
       }
-    }
-    else {
+    } else {
       System.out.print("Empty List, Filters likely contain no jobs of users specifications");
     }
-    //map.addLayer(pointLayer);
-
+    // map.addLayer(pointLayer);
 
     mapFrame.setSize(800, 600);
     mapFrame.setVisible(true);
     // Now display the map
-    //JMapFrame.showMap(map);
+    // JMapFrame.showMap(map);
   }
 
   static Layer addPoint(double latitude, double longitude) {
@@ -107,9 +104,8 @@ public class MapGUI {
     featureCollection.add(feature);
     float opacity = 1;
     float size = 10;
-    Style style = SLD.createPointStyle("Circle",Color.CYAN,Color.BLACK,opacity,size);
+    Style style = SLD.createPointStyle("Circle", Color.CYAN, Color.BLACK, opacity, size);
     Layer layer = new FeatureLayer(featureCollection, style);
     return layer;
   }
-
 }
