@@ -67,14 +67,20 @@ public class Sorting {
   // System.out.println(Arrays.toString(TimeZone.getAvailableIDs()));
   public List<DatabaseEntry> dateSearchOlderThan(List<DatabaseEntry> dbListRaw, String dateinput) {
     List<DatabaseEntry> dbListSorted = new ArrayList<>();
+    Date date2 = new Date();
     DateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
     if (dateinput != null) {
       try {
         Date dateToCheckAgainst = format.parse(dateinput.replaceAll("Z$", "PST"));
         for (DatabaseEntry jobfilter : dbListRaw) {
           if (jobfilter.getCreated_at() != null) {
-            Date date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
-
+            try {
+              date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
+            }catch (ParseException e)
+            {
+              DateFormat format2 = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+              date2 = format2.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
+            }
             if (date2.getTime() < dateToCheckAgainst.getTime()) {
               dbListSorted.add(jobfilter);
             }
@@ -90,17 +96,22 @@ public class Sorting {
     return dbListSorted;
   }
 
-  public List<DatabaseEntry> dateSearchYoungerThan(
-      List<DatabaseEntry> dbListRaw, String dateinput) {
+  public List<DatabaseEntry> dateSearchYoungerThan(List<DatabaseEntry> dbListRaw, String dateinput) {
     List<DatabaseEntry> dbListSorted = new ArrayList<>();
+    Date date2 = new Date();
     DateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
     if (dateinput != null) {
       try {
         Date dateToCheckAgainst = format.parse(dateinput.replaceAll("Z$", "PST"));
         for (DatabaseEntry jobfilter : dbListRaw) {
           if (jobfilter.getCreated_at() != null) {
-            Date date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
-
+            try {
+              date2 = format.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
+            }catch (ParseException e)
+            {
+              DateFormat format2 = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+              date2 = format2.parse(jobfilter.getCreated_at().replaceAll("Z$", "PST"));
+            }
             if (date2.getTime() > dateToCheckAgainst.getTime()) {
               dbListSorted.add(jobfilter);
             }
